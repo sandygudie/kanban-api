@@ -5,6 +5,10 @@ const workspaceSchema = Schema({
     type: String,
     required: true
   },
+  workspaceAdmin: {
+    type: String,
+    required: true
+  },
   role: {
     type: String,
     enum: ['member', 'admin'],
