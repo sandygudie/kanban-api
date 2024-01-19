@@ -1,14 +1,14 @@
-![Yellow Black Playful Lamp Bulb Idea Company Logo-svg](https://user-images.githubusercontent.com/54219127/236227772-222d3f86-e627-417a-a299-b686c44f8487.svg)
+
 
 ## Description
 
-An open source RESTFUL API quiz questions for popular programming languages. It consists of Multiple Choice Questions(MCQs) in various areas including: HTML, CSS, JavaScript, NextJs etc.
+Kanban-API
 
 ### Resources
 
-- Documentation: https://quizbase.netlify.app
-- Demo App: https://app-quizs.netlify.app/login
-- Postman Documentation: https://documenter.getpostman.com/view/9434341/2s93Y3v1bu
+- Documentation: 
+- Demo App:
+- Postman Documentation: 
 
 ### Technology/Tools
 
