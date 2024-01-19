@@ -55,12 +55,11 @@ const userSchema = Schema(
   }
 )
 
-userSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    delete returnedObject.__v
-  }
-})
+// userSchema.set('toJSON', {
+//   transform: (document, returnedObject) => {
+//     delete returnedObject.__v
+//     delete returnedObject.password
+//   }
+// })
 
-const User = model('User', userSchema)
-
-module.exports = User
+module.exports = model('User', userSchema)

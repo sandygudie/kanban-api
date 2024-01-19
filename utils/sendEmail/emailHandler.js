@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer')
 const ejs = require('ejs')
 const path = require('path')
+const { EMAIL_USER, EMAIL_PASS, APP_HOSTNAME } = require('../../config')
+
 const sendEmail = async (options) => {
   try {
     const transporter = nodemailer.createTransport({
@@ -8,26 +10,26 @@ const sendEmail = async (options) => {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: EMAIL_USER,
+        pass: EMAIL_PASS
       }
     })
 
     let data
-    if (options.verification_url) {
-      const verificationUrl = options.verification_url
+    if (options.verificationUrl) {
+      const { verificationUrl, username } = options
       data = await ejs.renderFile(path.join(__dirname, '/templates/verifyemail.ejs'), {
-        verificationUrl
-        // pass data to the template file , firstname
+        verificationUrl,
+        username
       })
     } else {
-      const resetUrl = options.reset_url
+      const resetUrl = options.resetUrl
       data = await ejs.renderFile(path.join(__dirname, '/templates/resetlink.ejs'), {
         resetUrl
       })
     }
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: EMAIL_USER,
       to: options.email,
       subject: options.subject,
       html: data
@@ -42,11 +44,12 @@ const sendEmail = async (options) => {
 }
 
 const emailVerification = async (user) => {
-  const verificationUrl = `${process.env.APP_HOSTNAME}/email-verify/?${user.confirmationCode}`
+  const verificationUrl = `${APP_HOSTNAME}/api/v1/auth/email-verify/${user.confirmationCode}`
   const response = await sendEmail({
     email: user.email,
     subject: 'Verify your email address.',
-    verificationUrl
+    verificationUrl,
+    username: user.firstname
   })
   return response
 }
@@ -56,7 +59,8 @@ const passwordResetLink = async (user) => {
   const response = await sendEmail({
     email: user.email,
     subject: 'Reset Password',
-    resetUrl
+    resetUrl,
+    username: user.firstname
   })
   return response
 }

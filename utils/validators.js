@@ -5,11 +5,19 @@ function registerValidation(data) {
     firstname: Joi.string().required().trim().label('First Name'),
     lastname: Joi.string().required().trim().label('Last Name'),
     email: Joi.string().email().required().lowercase().trim().label('email'),
-    password: Joi.string().min(5).max(15).required().trim().label('Password')
+    password: Joi.string().alphanum().min(5).required().trim().label('Password')
+  })
+  return schema.validate(data)
+}
+function loginValidation(data) {
+  const schema = Joi.object({
+    email: Joi.string().email().required().lowercase().trim().label('email'),
+    password: Joi.string().alphanum().min(5).required().trim().label('Password')
   })
   return schema.validate(data)
 }
 
 module.exports = {
-  registerValidation
+  registerValidation,
+  loginValidation
 }

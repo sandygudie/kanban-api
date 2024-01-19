@@ -1,8 +1,8 @@
-const User = require('../models/user')
-const { errorResponse, successResponse } = require('../utils/responseHandler')
-const { registerValidation } = require('../utils/validators')
-const { emailVerification } = require('../utils/sendEmail/emailHandler')
 const bcrypt = require('bcrypt')
+const User = require('../models/user')
+const { errorResponse } = require('../utils/responseHandler')
+const { registerValidation, loginValidation } = require('../utils/validators')
+const { emailVerification } = require('../utils/sendEmail/emailHandler')
 const { generateToken } = require('../middlewares/token')
 
 const emailVerificationToken = async (user) => {
@@ -23,12 +23,15 @@ const register = async (req, res) => {
   if (error) return errorResponse(res, 400, error.details[0].message)
 
   const existingUser = await User.findOne({ email })
-  if (existingUser.isEmailVerified === 'verified') {
-    return errorResponse(res, 400, 'Please continue to account set up')
+  if (existingUser) {
+    if (existingUser.isEmailVerified === 'verified') {
+      return errorResponse(res, 400, 'Email already exist')
+    } else {
+      return errorResponse(res, 400, 'Check inbox for email verification')
+    }
   } else {
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(password, saltRounds)
-
     const user = new User({
       firstname,
       lastname,
@@ -37,27 +40,79 @@ const register = async (req, res) => {
     })
 
     const savedUser = await emailVerificationToken(user)
+
     const response = await emailVerification(savedUser)
     if (response) {
-      return successResponse(res, 201, 'Verification mail sent to email')
+      return res
+        .cookie('confirmation_code', savedUser.confirmationCode, {
+          httpOnly: true,
+          secure: false,
+          sameSite: 'Lax', // or 'Strict', it depends
+          expires: new Date(Date.now() + 5 * 60 * 1000)
+        })
+        .status(201)
+        .json({ message: 'Verification mail sent to email!' })
     }
   }
 }
-
-const verifyUser = async (req, res) => {
+const verifyUserEmail = async (req, res) => {
   const user = await User.findOne({
     confirmationCode: req.params.confirmationCode
   })
   if (user) {
     user.isEmailVerified = 'verified'
     user.confirmationCode = null
+    user.expireAt = null
     await user.save()
-    return successResponse(res, 200, 'Email Verification Sucessfully!')
+    const { accessToken } = await generateToken(user)
+    return res
+      .cookie('access_token', accessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax', // or 'Strict', it depends
+        expires: new Date(Date.now() + 60 * 60 * 1000)
+      })
+      .status(200)
+      .json({ message: 'Email Verification Sucessfully!' })
   }
   return errorResponse(res, 404, 'Invalid link')
 }
 
+const login = async (req, res) => {
+  if (!req.body) {
+    return errorResponse(res, 400, 'no request body')
+  }
+  const { email, password } = req.body
+  const { error } = loginValidation(req.body)
+  if (error) return errorResponse(res, 400, error.details[0].message)
+
+  const user = await User.findOne({ email })
+  if (user && (await bcrypt.compare(password, user.password))) {
+    const { accessToken } = await generateToken(user)
+    return res
+      .cookie('access_token', accessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax',
+        expires: new Date(Date.now() + 60 * 60 * 1000) // one hour
+      })
+      .status(200)
+      .json({ message: 'Logged in successfully' })
+  } else {
+    return errorResponse(res, 400, 'Invalid credentials')
+  }
+}
+
+const logout = async (req, res) => {
+  return res
+    .clearCookie('access_token')
+    .status(200)
+    .json({ message: 'Successfully logged out 😏 🍀' })
+}
+
 module.exports = {
   register,
-  verifyUser
+  verifyUserEmail,
+  login,
+  logout
 }

@@ -3,7 +3,7 @@ const { errorResponse } = require('../utils/responseHandler')
 // Handling non-existing routes
 const unknownEndpoint = (req, res, next) => {
   res.status(404).send({ error: 'Route not found' })
-  return next()
+  // return next()
 }
 
 const errorHandler = (error, request, response, next) => {
