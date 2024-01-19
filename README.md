@@ -1,14 +1,12 @@
-
-
 ## Description
 
 Kanban-API
 
 ### Resources
 
-- Documentation: 
+- Documentation:
 - Demo App:
-- Postman Documentation: 
+- Postman Documentation:
 
 ### Technology/Tools
 
