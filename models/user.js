@@ -21,10 +21,12 @@ const userSchema = Schema(
     profilepics: {
       type: String
     },
-    workspace: {
-      type: Schema.Types.ObjectId,
-      ref: 'Workspace'
-    },
+    workspace: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Workspace'
+      }
+    ],
     isEmailVerified: {
       type: String,
       enum: ['pending', 'verified'],
@@ -38,9 +40,6 @@ const userSchema = Schema(
         expireAfterSeconds: 300,
         partialFilterExpression: { isEmailVerified: 'pending' }
       }
-    },
-    confirmationCode: {
-      type: String
     },
     googleLogin: {
       type: String

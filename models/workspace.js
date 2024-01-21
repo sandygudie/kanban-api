@@ -16,11 +16,18 @@ const workspaceSchema = Schema({
     required: true
   },
   description: {
-    type: String,
-    required: true
+    type: String
   },
-  members: [{ name: String, email: String }],
-  // you email has to be added to the memeber list and you must have an account with us
+
+  members: [
+    new Schema(
+      {
+        userId: String,
+        role: String
+      },
+      { _id: false }
+    )
+  ],
   profilePics: String,
   project: { type: Schema.Types.ObjectId, ref: 'Project' }
 })

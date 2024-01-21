@@ -7,8 +7,13 @@
     <title>Verify Email</title>
   </head>
   <style>
+    *,
+    body,
+    html,
+    h1,
     p {
       margin: 0;
+      padding:0
     }
   </style>
   <body style="background-color: #008b8b12; padding: 1em">
@@ -34,7 +39,7 @@
         Email Verification
       </p>
       <div style="font-size: 20px; padding: 0px 40px">
-        <p style="text-align: left; font-size: 25px; font-weight: 500">Hi,</p>
+        <p style="text-align: left; font-size: 25px; font-weight: 500">Hi <%= username %>,</p>
 
         <p style="padding-top: 0.5em; font-weight: 700; color: #008b8b">
           Thank you for signing up on Kanban!

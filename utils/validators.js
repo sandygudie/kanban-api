@@ -17,7 +17,16 @@ function loginValidation(data) {
   return schema.validate(data)
 }
 
+function workspaceValidation(data) {
+  const schema = Joi.object({
+    name: Joi.string().required().trim().label('name'),
+    description: Joi.string().trim().label('Workspace description')
+  })
+  return schema.validate(data)
+}
+
 module.exports = {
   registerValidation,
-  loginValidation
+  loginValidation,
+  workspaceValidation
 }

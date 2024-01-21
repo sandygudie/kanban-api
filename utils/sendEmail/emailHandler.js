@@ -43,13 +43,13 @@ const sendEmail = async (options) => {
   }
 }
 
-const emailVerification = async (user) => {
-  const verificationUrl = `${APP_HOSTNAME}/api/v1/auth/email-verify/${user.confirmationCode}`
+const emailVerification = async (emailInfo) => {
+  const verificationUrl = `${APP_HOSTNAME}/api/v1/auth/email-verify/${emailInfo.confirmationCode}`
   const response = await sendEmail({
-    email: user.email,
+    email: emailInfo.email,
     subject: 'Verify your email address.',
     verificationUrl,
-    username: user.firstname
+    username: emailInfo.firstname
   })
   return response
 }

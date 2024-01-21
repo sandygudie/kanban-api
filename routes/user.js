@@ -1,16 +1,15 @@
 const Router = require('express')
 const {
-  createWorkspace
-  //   getUserWorkspaces,
+  getUserWorkspaces
   //   getUserWorkspace,
   //   updateWorkspace,
   //   deleteWorkspace,
   //   addMemberWorkspace
-} = require('../controllers/workspace')
+} = require('../controllers/user')
 const { verifyUser } = require('../middlewares/userChecks')
 
-const workspaceRouter = Router()
-workspaceRouter.post('/', verifyUser, createWorkspace)
+const userRouter = Router()
+userRouter.get('/', verifyUser, getUserWorkspaces)
 // workspaceRouter.get('/:workspaceId', verifyUser, getUserWorkspaces)
 // workspaceRouter.get('/:workspaceId', verifyUser, getUserWorkspace)
 // workspaceRouter.patch('/:workspaceId', updateWorkspace)
@@ -18,4 +17,4 @@ workspaceRouter.post('/', verifyUser, createWorkspace)
 
 // workspaceRouter.patch('addmember/:workspaceId', verifyUser, addMemberWorkspace) // give them workspace id and name
 
-module.exports = { workspaceRouter }
+module.exports = { userRouter }
