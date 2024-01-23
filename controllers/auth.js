@@ -1,6 +1,5 @@
-const bcrypt = require('bcrypt')
 const User = require('../models/user')
-const { errorResponse } = require('../utils/responseHandler')
+const { errorResponse, successResponse } = require('../utils/responseHandler')
 const { registerValidation, loginValidation } = require('../utils/validators')
 const { emailVerification } = require('../utils/sendEmail/emailHandler')
 const { generateToken } = require('../middlewares/token')
@@ -20,34 +19,32 @@ const register = async (req, res) => {
         return errorResponse(res, 400, 'Email already exist')
       }
     } else {
-      const { accessToken, newUser } = await createAccount(User, req.body)
+      const { accessToken, newUser } = await createAccount(req.body)
+      newUser.confirmationCode = accessToken
+      await newUser.save()
       const emailInfo = {
         confirmationCode: accessToken,
         firstname: newUser.firstname,
         email: newUser.email
       }
       const response = await emailVerification(emailInfo)
-      if (response) {
-        return res
-          .cookie('confirmation_code', accessToken, {
-            httpOnly: true,
-            secure: false,
-            sameSite: 'Lax',
-            expires: new Date(Date.now() + 5 * 60 * 1000)
-          })
-          .status(200)
-          .json({ message: 'Verification mail sent to email!' })
+      if (response.message) {
+        return errorResponse(res, 500, 'Error sending mail')
+      } else {
+        return successResponse(res, 200, 'Verification link sent to email!')
       }
     }
   } catch (error) {
-    return errorResponse(res, error.message, 500)
+    return errorResponse(res, 500, error.message)
   }
 }
+
 const verifyUserEmail = async (req, res) => {
   const existingUser = await User.findOne({
-    _id: req.user.id
+    confirmationCode: req.params.confirmationCode
   })
   if (existingUser) {
+    existingUser.confirmationCode = null
     existingUser.isEmailVerified = 'verified'
     existingUser.expireAt = null
     await existingUser.save()
@@ -71,7 +68,7 @@ const login = async (req, res) => {
   if (error) return errorResponse(res, 400, error.details[0].message)
 
   const existingUser = await User.findOne({ email })
-  if (existingUser && (await bcrypt.compare(password, existingUser.password))) {
+  if (existingUser && (await existingUser.comparePassword(password))) {
     const { accessToken } = await generateToken(existingUser)
     return res
       .cookie('access_token', accessToken, {
@@ -86,7 +83,7 @@ const login = async (req, res) => {
         userId: existingUser._id
       })
   } else {
-    return errorResponse(res, 400, 'Invalid credentials')
+    return errorResponse(res, 401, 'Invalid username or password')
   }
 }
 

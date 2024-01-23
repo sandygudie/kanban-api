@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-
+const bcrypt = require('bcrypt')
 const userSchema = Schema(
   {
     firstname: {
@@ -27,6 +27,9 @@ const userSchema = Schema(
         ref: 'Workspace'
       }
     ],
+    confirmationCode: {
+      type: String
+    },
     isEmailVerified: {
       type: String,
       enum: ['pending', 'verified'],
@@ -60,5 +63,18 @@ const userSchema = Schema(
 //     delete returnedObject.password
 //   }
 // })
+userSchema.pre('save', async function (next) {
+  const user = this
+  if (!user.isModified('password')) return next()
+
+  const salt = await bcrypt.genSalt(10)
+  const hash = await bcrypt.hash(user.password, salt)
+  user.password = hash
+  next()
+})
+
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password)
+}
 
 module.exports = model('User', userSchema)

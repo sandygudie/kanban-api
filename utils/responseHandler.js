@@ -11,4 +11,9 @@ const errorResponse = (res, statusCode, message) => {
   })
 }
 
-module.exports = { successResponse, errorResponse }
+const catchAsyncError = (fn) => async (req, res, next) => {
+  const response = await fn(req, res, next).catch(next)
+  return response
+}
+
+module.exports = { successResponse, errorResponse, catchAsyncError }

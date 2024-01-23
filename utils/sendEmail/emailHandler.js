@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer')
 const ejs = require('ejs')
 const path = require('path')
 const { EMAIL_USER, EMAIL_PASS, APP_HOSTNAME } = require('../../config')
-
+const { titleCase } = require('../index')
 const sendEmail = async (options) => {
   try {
     const transporter = nodemailer.createTransport({
@@ -22,10 +22,17 @@ const sendEmail = async (options) => {
         verificationUrl,
         username
       })
-    } else {
+    } else if (options.resetUrl) {
       const resetUrl = options.resetUrl
       data = await ejs.renderFile(path.join(__dirname, '/templates/resetlink.ejs'), {
         resetUrl
+      })
+    } else {
+      const { workspaceName, inviteCode, inviteLink } = options
+      data = await ejs.renderFile(path.join(__dirname, '/templates/workspaceinvite.ejs'), {
+        workspaceName,
+        inviteCode,
+        inviteLink
       })
     }
     const mailOptions = {
@@ -49,7 +56,7 @@ const emailVerification = async (emailInfo) => {
     email: emailInfo.email,
     subject: 'Verify your email address.',
     verificationUrl,
-    username: emailInfo.firstname
+    username: titleCase(emailInfo.firstname)
   })
   return response
 }
@@ -60,9 +67,21 @@ const passwordResetLink = async (user) => {
     email: user.email,
     subject: 'Reset Password',
     resetUrl,
-    username: user.firstname
+    username: titleCase(user.firstname)
   })
   return response
 }
 
-module.exports = { sendEmail, emailVerification, passwordResetLink }
+const workspaceInvite = async (workspace) => {
+  const inviteLink = 'https://kanban.netlify.app/register'
+  const response = await sendEmail({
+    email: workspace.email,
+    subject: 'Workspace Invite',
+    workspaceName: workspace.name,
+    inviteCode: workspace.inviteCode,
+    inviteLink
+  })
+  return response
+}
+
+module.exports = { emailVerification, passwordResetLink, workspaceInvite }

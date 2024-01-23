@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Verify Email</title>
+    <title>Workspace Invite</title>
   </head>
 
   <body style="background-color: #008b8b12; padding: 1em">
@@ -18,35 +18,28 @@
           'Helvetica Neue';
       "
     >
-      <p
-        style="
-          border-bottom: 0.1px solid #008b8b2b;
-          padding: 30px 0px 10px 40px;
-          color: #008b8b;
-          font-size: 28px;
-          font-weight: bolder;
-        "
-      >
-        Email Verification
-      </p>
-      <div style="font-size: 20px; padding: 0px 40px">
-        <p style="text-align: left; font-size: 20px; font-weight: 500">Hi <%= username %>,</p>
+      <div style="font-size: 20px; padding: 30px 40px">
+        <p style="text-align: left; font-size: 20px; margin:0; font-weight: 500">Hi,</p>
 
         <p
           style="
             padding-top: 0.5em;
             font-weight: 700;
             color: #008b8b;
-            font-size: 20px;
+            font-size: 25px;
             text-align: center;
           "
         >
-          Thank you for signing up on Kanban!
+          Workspace Invite!
         </p>
-        <p style="color: #000000; font-size: 20px">
-          Click on the button below to verify your email address and start using your account. Link
-          expires in 30 minutes.
+        <p style="color: #000000; font-size: 18px">
+          <%= workspaceName %> is inviting you to their workspace. Accept invite to sign up or login with this email
+          to join the workspace.
         </p>
+        <div style="margin: auto; text-align: center; padding: 0.5em">
+          <p style="font-weight: bold;margin:0">Workspace Name: <%= workspaceName %></p>
+          <p style="font-weight: bold;margin:0">Invite Code: <%= inviteCode %></p>
+        </div>
 
         <div style="text-align: center; color: white !important; margin-top: 10px">
           <a
@@ -61,9 +54,9 @@
               background-color: #008b8b;
               color: white !important;
             "
-            href="<%= verificationUrl %>"
+            href="<%= inviteLink %>"
           >
-            Verify Email</a
+            Accept Invite</a
           >
         </div>
       </div>

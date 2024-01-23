@@ -1,21 +1,29 @@
 const Router = require('express')
 const {
-  createWorkspace
-  //   getUserWorkspaces,
-  //   getUserWorkspace,
-  //   updateWorkspace,
+  createWorkspace,
+  getAWorkspace,
+  updateAWorkspace,
+  addWorkspaceMember,
   //   deleteWorkspace,
-  //   addMemberWorkspace
+  joinWorkspace,
+  deleteMemberWorkspace
 } = require('../controllers/workspace')
-const { verifyUser } = require('../middlewares/userChecks')
+const { verifyUser, verifyIsUserAdmin } = require('../middlewares/userChecks')
 
 const workspaceRouter = Router()
 workspaceRouter.post('/', verifyUser, createWorkspace)
-// workspaceRouter.get('/:workspaceId', verifyUser, getUserWorkspaces)
-// workspaceRouter.get('/:workspaceId', verifyUser, getUserWorkspace)
-// workspaceRouter.patch('/:workspaceId', updateWorkspace)
+workspaceRouter.get('/:workspaceId', verifyUser, getAWorkspace) // you have to be part of the work space to be able to retrieved
+workspaceRouter.patch('/:workspaceId', verifyUser, verifyIsUserAdmin, updateAWorkspace)
+workspaceRouter.patch('/addmember/:workspaceId', verifyUser, verifyIsUserAdmin, addWorkspaceMember)
 // workspaceRouter.delete('/:workspaceId', verifyUser, deleteWorkspace)
-
-// workspaceRouter.patch('addmember/:workspaceId', verifyUser, addMemberWorkspace) // give them workspace id and name
-
+workspaceRouter.post('/join-workspace', verifyUser, joinWorkspace)
+workspaceRouter.delete(
+  '/delete-member/:workspaceId/:userId',
+  verifyUser,
+  verifyIsUserAdmin,
+  deleteMemberWorkspace
+)
 module.exports = { workspaceRouter }
+
+// update workspace
+// i have to be an admin of that workspace to update a workspace , test that other admins cannot update other people workspace.

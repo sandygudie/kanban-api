@@ -1,16 +1,8 @@
-const bcrypt = require('bcrypt')
 const { generateToken } = require('../middlewares/token')
+const User = require('../models/user')
 
-const createAccount = async (user, body) => {
-  const { password, email, firstname, lastname } = body
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
-  const newUser = await user.create({
-    firstname,
-    lastname,
-    email,
-    password: passwordHash
-  })
+const createAccount = async (body) => {
+  const newUser = await User.create(body)
   const { accessToken } = await generateToken(newUser)
   return { accessToken, newUser }
 }

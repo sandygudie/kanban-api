@@ -9,25 +9,27 @@ const workspaceSchema = Schema({
     type: String,
     required: true
   },
-  role: {
-    type: String,
-    enum: ['member', 'admin'],
-    default: 'admin',
-    required: true
-  },
   description: {
     type: String
   },
-
+  inviteCode: {
+    type: String
+  },
   members: [
     new Schema(
       {
         userId: String,
-        role: String
+        email: String,
+        role: {
+          type: String,
+          enum: ['member', 'admin'],
+          default: 'member'
+        }
       },
       { _id: false }
     )
   ],
+  pendingMembers: [String],
   profilePics: String,
   project: { type: Schema.Types.ObjectId, ref: 'Project' }
 })
