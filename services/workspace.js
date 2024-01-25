@@ -105,12 +105,18 @@ const removeAMember = catchAsyncError(async (params) => {
   )
 
   if (checkMemberExist) {
-    workspace.members = workspace.members.filter((ele) => ele.userId !== userId)
-    await workspace.save()
+    await Workspace.updateOne(
+      {
+        _id: workspaceId
+      },
+
+      { $pull: { members: { userId } } }
+    )
+
     const user = await User.findOne({
       _id: userId
     })
-    user.workspace = user.workspace.concat(workspace._id)
+    user.workspace = user.workspace.filter((ele) => ele._id === workspaceId)
     await user.save()
     return workspace
   } else {
@@ -119,11 +125,18 @@ const removeAMember = catchAsyncError(async (params) => {
   return updated
 })
 
+const deleteAWorkspace = catchAsyncError(async (workspaceId, userId) => {
+  const updatedWorkspace = await Workspace.findByIdAndDelete(workspaceId)
+  await User.updateOne({ _id: userId }, { $pull: { workspace: workspaceId } })
+  return updatedWorkspace
+})
+
 module.exports = {
   createWorkspaceAccount,
   getWorkspace,
   updateWorkspace,
   addAMember,
   joinAWorkspace,
-  removeAMember
+  removeAMember,
+  deleteAWorkspace
 }

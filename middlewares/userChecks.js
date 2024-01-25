@@ -30,7 +30,7 @@ const verifyUser = async (req, res, next) => {
   }
 }
 
-const verifyIsUserAdmin = async (req, res, next) => {
+const verifyWorkspaceAdmin = async (req, res, next) => {
   const workspace = await verifyWorkspace(req.params.workspaceId)
   if (!workspace) {
     return errorResponse(res, 401, 'No exisitng workspace')
@@ -41,4 +41,4 @@ const verifyIsUserAdmin = async (req, res, next) => {
     return errorResponse(res, 401, 'Unauthorized')
   }
 }
-module.exports = { verifyUser, verifyIsUserAdmin }
+module.exports = { verifyUser, verifyWorkspaceAdmin }

@@ -4,7 +4,7 @@ const { verifyUser } = require('../middlewares/userChecks')
 
 const authRouter = Router()
 authRouter.post('/register', register)
-authRouter.get('/email-verify/:confirmationCode', verifyUserEmail)
+authRouter.post('/email-verify/:confirmationCode', verifyUserEmail)
 authRouter.post('/login', login)
 authRouter.get('/logout', verifyUser, logout)
 

@@ -7,7 +7,8 @@ const {
   updateWorkspace,
   addAMember,
   joinAWorkspace,
-  removeAMember
+  removeAMember,
+  deleteAWorkspace
 } = require('../services/workspace')
 
 const createWorkspace = async (req, res) => {
@@ -93,12 +94,23 @@ const deleteMemberWorkspace = async (req, res) => {
     return errorResponse(res, 400, error.message)
   }
 }
-
+const deleteWorkspace = async (req, res) => {
+  try {
+    const updatedWorkspace = await deleteAWorkspace(req.params.workspaceId, req.user.id)
+    if (!updatedWorkspace) {
+      return errorResponse(res, 400, 'Error deleting Workspace')
+    }
+    return successResponse(res, 200, 'Workspace Deleted')
+  } catch (error) {
+    return errorResponse(res, 400, error.message)
+  }
+}
 module.exports = {
   createWorkspace,
   getAWorkspace,
   updateAWorkspace,
   addWorkspaceMember,
   joinWorkspace,
-  deleteMemberWorkspace
+  deleteMemberWorkspace,
+  deleteWorkspace
 }
