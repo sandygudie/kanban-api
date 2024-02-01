@@ -31,9 +31,15 @@ const workspaceSchema = Schema({
   ],
   pendingMembers: [String],
   profilePics: String,
-  project: { type: Schema.Types.ObjectId, ref: 'Project' }
+  boards: [{ type: Schema.Types.ObjectId, ref: 'Board' }]
 })
 
-const Workspace = model('Workspace', workspaceSchema)
+// workspaceSchema.post('save', async function (child) {
+//   try {
+//     const parent = await this.model('board').findOne({ _id: child.parent })
+//     parent.children.push(child._id)
+//     parent.save()
+//   } catch (error) {} 1012108290
+// })
 
-module.exports = Workspace
+module.exports = model('Workspace', workspaceSchema)

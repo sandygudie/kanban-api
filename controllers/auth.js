@@ -4,6 +4,8 @@ const { registerValidation, loginValidation } = require('../utils/validators')
 const { emailVerification } = require('../utils/sendEmail/emailHandler')
 const { generateToken } = require('../middlewares/token')
 const { createAccount } = require('../services/auth')
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client()
 
 const register = async (req, res) => {
   try {
@@ -94,9 +96,27 @@ const logout = async (req, res) => {
     .json({ message: 'Successfully logged out 😏 🍀' })
 }
 
+const googleLogin = async (req, res) => {
+  const { token } = req.body
+
+  client.setCredentials({ access_token: token })
+  const userinfo = await client.request({
+    url: 'https://www.googleapis.com/oauth2/v3/userinfo'
+  })
+  const user = userinfo.data
+  console.log(user)
+  // try {
+  //   const existingUser = await User.findOne(user.email)
+  //   if (existingUser) {
+
+  //   }
+  // } catch (error) {}
+}
+
 module.exports = {
   register,
   verifyUserEmail,
   login,
-  logout
+  logout,
+  googleLogin
 }

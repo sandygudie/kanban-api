@@ -14,14 +14,14 @@ const workspaceRouter = Router()
 workspaceRouter.post('/', verifyUser, createWorkspace)
 workspaceRouter.get('/:workspaceId', verifyUser, getAWorkspace)
 workspaceRouter.patch('/:workspaceId', verifyUser, verifyWorkspaceAdmin, updateAWorkspace)
+workspaceRouter.delete('/:workspaceId', verifyUser, verifyWorkspaceAdmin, deleteWorkspace)
+workspaceRouter.post('/join-workspace', verifyUser, joinWorkspace)
 workspaceRouter.patch(
   '/addmember/:workspaceId',
   verifyUser,
   verifyWorkspaceAdmin,
   addWorkspaceMember
 )
-workspaceRouter.delete('/:workspaceId', verifyUser, verifyWorkspaceAdmin, deleteWorkspace)
-workspaceRouter.post('/join-workspace', verifyUser, joinWorkspace)
 workspaceRouter.delete(
   '/delete-member/:workspaceId/:userId',
   verifyUser,

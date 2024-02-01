@@ -41,4 +41,17 @@ const verifyWorkspaceAdmin = async (req, res, next) => {
     return errorResponse(res, 401, 'Unauthorized')
   }
 }
-module.exports = { verifyUser, verifyWorkspaceAdmin }
+const verifyWorkspaceMember = async (req, res, next) => {
+  const workspace = await verifyWorkspace(req.params.workspaceId)
+  if (!workspace) {
+    return errorResponse(res, 401, 'No exisitng workspace')
+  }
+  const isWorkspaceMember = workspace.members.find((ele) => ele.userId === req.user.id)
+  if (isWorkspaceMember) {
+    return next()
+  } else {
+    return errorResponse(res, 401, 'Unauthorized')
+  }
+}
+
+module.exports = { verifyUser, verifyWorkspaceAdmin, verifyWorkspaceMember }

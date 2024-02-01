@@ -98,7 +98,7 @@ const deleteWorkspace = async (req, res) => {
   try {
     const updatedWorkspace = await deleteAWorkspace(req.params.workspaceId, req.user.id)
     if (!updatedWorkspace) {
-      return errorResponse(res, 400, 'Error deleting Workspace')
+      return errorResponse(res, 400, 'Error deleting workspace')
     }
     return successResponse(res, 200, 'Workspace Deleted')
   } catch (error) {

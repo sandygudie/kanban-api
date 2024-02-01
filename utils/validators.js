@@ -24,6 +24,7 @@ function workspaceValidation(data) {
   })
   return schema.validate(data)
 }
+
 function joinWorkspaceValidation(data) {
   const schema = Joi.object({
     workspaceName: Joi.string().required().trim().label('name'),
@@ -38,10 +39,43 @@ function ValidEmail(data) {
   return schema.validate(data)
 }
 
+function boardValidation(data) {
+  const schema = Joi.object({
+    name: Joi.string().required().trim().label('name'),
+    column: Joi.array().items(Joi.string()).required().label('column')
+  })
+  return schema.validate(data)
+}
+function columnValidation(data) {
+  const schema = Joi.object({
+    name: Joi.string().required().trim().label('name')
+  })
+  return schema.validate(data)
+}
+
+function taskValidation(data) {
+  const schema = Joi.object({
+    title: Joi.string().required().trim().label('task title'),
+    subtasks: Joi.object({
+      title: Joi.string().required(),
+      isCompleted: Joi.string().required()
+    })
+      .required()
+      .label('subtasks'),
+    description: Joi.string().trim().label('Task description'),
+    assignTo: Joi.string().trim().label('assignTo'),
+    deadline: Joi.string().trim().label('Task deadline')
+  })
+  return schema.validate(data)
+}
+
 module.exports = {
   registerValidation,
   loginValidation,
   workspaceValidation,
   ValidEmail,
-  joinWorkspaceValidation
+  joinWorkspaceValidation,
+  boardValidation,
+  columnValidation,
+  taskValidation
 }
