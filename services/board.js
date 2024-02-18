@@ -14,20 +14,35 @@ const createABoard = async (body, workspaceId) => {
   workspace.boards.push(boardDetails._id)
   await workspace.save()
 
-  await column.map((col) => {
-    return Column.create({
+  column.map(async (col) => {
+    const newColumn = await new Column({
       name: col,
       boardId: newBoard._id
     })
+    const columnArray = await newColumn.save()
+    const board = await Board.findOne({ _id: boardDetails._id })
+    await board.columns.push(columnArray)
+    await board.save()
   })
   return newBoard
 }
 
 const allBoards = async (workspaceId) => {
-  const workspace = await Workspace.findOne({
+  const workspace = await Workspace.findById({
     _id: workspaceId
-  }).populate({ path: 'boards', select: '_id name' })
-  return workspace.boards
+  }).populate({
+    path: 'boards',
+    select: '_id name columns',
+    populate: {
+      path: 'columns',
+      select: '_id name tasks',
+      populate: {
+        path: 'tasks'
+        // select: '_id title subtasks'
+      }
+    }
+  })
+  return workspace
 }
 
 const updateABoard = async (boardId, body) => {

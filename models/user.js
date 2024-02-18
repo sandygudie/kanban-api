@@ -2,11 +2,7 @@ const { Schema, model } = require('mongoose')
 const bcrypt = require('bcrypt')
 const userSchema = Schema(
   {
-    firstname: {
-      type: String,
-      required: true
-    },
-    lastname: {
+    name: {
       type: String,
       required: true
     },
@@ -51,18 +47,22 @@ const userSchema = Schema(
       type: String
     }
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: {
+      transform: (doc, ret, options) => {
+        // console.log(ret)
+        delete ret.password
+        delete ret.__v
+        return ret
+      }
+    }
+  },
   {
     collection: 'user'
   }
 )
 
-// userSchema.set('toJSON', {
-//   transform: (document, returnedObject) => {
-//     delete returnedObject.__v
-//     delete returnedObject.password
-//   }
-// })
 userSchema.pre('save', async function (next) {
   const user = this
   if (!user.isModified('password')) return next()

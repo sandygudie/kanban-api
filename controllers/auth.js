@@ -16,17 +16,21 @@ const register = async (req, res) => {
     const existingUser = await User.findOne({ email })
     if (existingUser) {
       if (existingUser.isEmailVerified === 'pending') {
-        return errorResponse(res, 400, 'Check inbox for email verification')
+        return errorResponse(
+          res,
+          400,
+          'Email already registered! check inbox for verification link'
+        )
       } else {
         return errorResponse(res, 400, 'Email already exist')
       }
     } else {
-      const { accessToken, newUser } = await createAccount(req.body)
-      newUser.confirmationCode = accessToken
+      const { confirmationCode, newUser } = await createAccount(req.body)
+      newUser.confirmationCode = confirmationCode
       await newUser.save()
       const emailInfo = {
-        confirmationCode: accessToken,
-        firstname: newUser.firstname,
+        confirmationCode,
+        name: newUser.name,
         email: newUser.email
       }
       const response = await emailVerification(emailInfo)
@@ -53,7 +57,7 @@ const verifyUserEmail = async (req, res) => {
     const { accessToken } = await generateToken(existingUser)
     return res
       .cookie('access_token', accessToken, {
-        httpOnly: true,
+        httpOnly: false,
         secure: false,
         sameSite: 'Lax',
         expires: new Date(Date.now() + 60 * 60 * 1000)
@@ -61,7 +65,7 @@ const verifyUserEmail = async (req, res) => {
       .status(200)
       .json({ message: 'Email Verification Sucessfully!', userId: existingUser._id })
   }
-  return errorResponse(res, 404, 'Invalid link')
+  return errorResponse(res, 404, 'Invalid or expired verification link!')
 }
 
 const login = async (req, res) => {
@@ -74,7 +78,7 @@ const login = async (req, res) => {
     const { accessToken } = await generateToken(existingUser)
     return res
       .cookie('access_token', accessToken, {
-        httpOnly: true,
+        httpOnly: false,
         secure: false,
         sameSite: 'Lax',
         expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
@@ -82,10 +86,10 @@ const login = async (req, res) => {
       .status(200)
       .json({
         message: 'Logged in successfully',
-        userId: existingUser._id
+        userdetails: { userId: existingUser._id, workspace: existingUser.workspace }
       })
   } else {
-    return errorResponse(res, 401, 'Invalid username or password')
+    return errorResponse(res, 403, 'Invalid username or password')
   }
 }
 

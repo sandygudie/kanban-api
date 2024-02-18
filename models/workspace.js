@@ -34,12 +34,4 @@ const workspaceSchema = Schema({
   boards: [{ type: Schema.Types.ObjectId, ref: 'Board' }]
 })
 
-// workspaceSchema.post('save', async function (child) {
-//   try {
-//     const parent = await this.model('board').findOne({ _id: child.parent })
-//     parent.children.push(child._id)
-//     parent.save()
-//   } catch (error) {} 1012108290
-// })
-
 module.exports = model('Workspace', workspaceSchema)

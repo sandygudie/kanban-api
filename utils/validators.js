@@ -2,69 +2,71 @@ const Joi = require('joi')
 
 function registerValidation(data) {
   const schema = Joi.object({
-    firstname: Joi.string().required().trim().label('First Name'),
-    lastname: Joi.string().required().trim().label('Last Name'),
-    email: Joi.string().email().required().lowercase().trim().label('email'),
+    name: Joi.string().required().trim().label('Name'),
+    email: Joi.string().email().required().lowercase().trim().label('Email'),
     password: Joi.string().alphanum().min(5).required().trim().label('Password')
   })
   return schema.validate(data)
 }
 function loginValidation(data) {
   const schema = Joi.object({
-    email: Joi.string().email().required().lowercase().trim().label('email'),
-    password: Joi.string().alphanum().min(5).required().trim().label('Password')
+    email: Joi.string().email().required().lowercase().trim().label('Email'),
+    password: Joi.string().required().trim().label('Password')
   })
   return schema.validate(data)
 }
 
 function workspaceValidation(data) {
   const schema = Joi.object({
-    name: Joi.string().required().trim().label('name'),
-    description: Joi.string().trim().label('Workspace description')
+    workspaceName: Joi.string().required().trim().label('Workspace name'),
+    description: Joi.string().allow('').optional()
   })
   return schema.validate(data)
 }
 
 function joinWorkspaceValidation(data) {
   const schema = Joi.object({
-    workspaceName: Joi.string().required().trim().label('name'),
-    workspaceInviteCode: Joi.string().trim().label('Workspace Invite code')
+    workspaceName: Joi.string().required().trim().label('Workspace name'),
+    inviteCode: Joi.string().trim().label('Workspace Invite code')
   })
   return schema.validate(data)
 }
 function ValidEmail(data) {
   const schema = Joi.object({
-    email: Joi.string().email().required().lowercase().trim().label('email')
+    email: Joi.string().email().required().lowercase().trim().label('Email')
   })
   return schema.validate(data)
 }
 
 function boardValidation(data) {
   const schema = Joi.object({
-    name: Joi.string().required().trim().label('name'),
-    column: Joi.array().items(Joi.string()).required().label('column')
+    name: Joi.string().required().trim().label('Board name'),
+    column: Joi.array().items(Joi.string()).required().label('Column')
   })
   return schema.validate(data)
 }
 function columnValidation(data) {
   const schema = Joi.object({
-    name: Joi.string().required().trim().label('name')
+    column: Joi.array().items(Joi.string()).required().label('Column')
   })
   return schema.validate(data)
 }
 
 function taskValidation(data) {
   const schema = Joi.object({
-    title: Joi.string().required().trim().label('task title'),
-    subtasks: Joi.object({
-      title: Joi.string().required(),
-      isCompleted: Joi.string().required()
-    })
+    title: Joi.string().required().trim().label('Task title'),
+    subtasks: Joi.array()
+      .items(
+        Joi.object({
+          title: Joi.string().required(),
+          isCompleted: Joi.boolean().required()
+        })
+      )
       .required()
-      .label('subtasks'),
-    description: Joi.string().trim().label('Task description'),
-    assignTo: Joi.string().trim().label('assignTo'),
-    deadline: Joi.string().trim().label('Task deadline')
+      .label('Subtasks'),
+    description: Joi.string().trim().allow('').optional(),
+    assignTo: Joi.string().trim(),
+    deadline: Joi.string().trim()
   })
   return schema.validate(data)
 }

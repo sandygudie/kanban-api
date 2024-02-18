@@ -11,13 +11,10 @@ const taskSchema = Schema(
     assignTo: String,
     deadline: Date,
     subtasks: [
-      new Schema(
-        {
-          title: String,
-          isCompleted: Boolean
-        },
-        { _id: false }
-      )
+      new Schema({
+        title: String,
+        isCompleted: Boolean
+      })
     ],
     columnId: {
       type: String,
@@ -29,15 +26,5 @@ const taskSchema = Schema(
     collection: 'tasks'
   }
 )
-
-taskSchema.post('save', async function (task) {
-  try {
-    const column = await this.model('Column').findOne({ _id: task.columnId })
-    column.tasks.push(task._id)
-    column.save()
-  } catch (error) {
-    console.log(error)
-  }
-})
 
 module.exports = model('Task', taskSchema)

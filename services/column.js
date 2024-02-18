@@ -1,15 +1,23 @@
 const Column = require('../models/column')
 const Board = require('../models/board')
 
-const createAColumn = async (name, boardId) => {
+const createAColumn = async (column, boardId) => {
   const verifyBoard = await Board.findOne({ _id: boardId })
   if (!verifyBoard) {
     return null
   }
-  const newColumn = await Column.create({
-    name,
-    boardId
+  const newColumn = column.map(async (col) => {
+    const newColumn = await new Column({
+      name: col,
+      boardId
+    })
+    const columnArray = await newColumn.save()
+    const board = await Board.findOne({ _id: boardId })
+    await board.columns.push(columnArray)
+    await board.save()
+    return newColumn
   })
+
   return newColumn
 }
 
@@ -29,8 +37,16 @@ const deleteAColumn = async (params) => {
   return updatedColumn
 }
 
+const getAColumn = async (columnId) => {
+  const column = await Column.findById(columnId).populate({
+    path: 'tasks'
+  })
+  return column
+}
+
 module.exports = {
   createAColumn,
   updateAColumn,
-  deleteAColumn
+  deleteAColumn,
+  getAColumn
 }

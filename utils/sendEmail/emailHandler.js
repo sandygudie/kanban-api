@@ -51,12 +51,12 @@ const sendEmail = async (options) => {
 }
 
 const emailVerification = async (emailInfo) => {
-  const verificationUrl = `${APP_HOSTNAME}/api/v1/auth/email-verify/${emailInfo.confirmationCode}`
+  const verificationUrl = `${APP_HOSTNAME}/email-verify/${emailInfo.confirmationCode}`
   const response = await sendEmail({
     email: emailInfo.email,
     subject: 'Verify your email address.',
     verificationUrl,
-    username: titleCase(emailInfo.firstname)
+    username: titleCase(emailInfo.name)
   })
   return response
 }
@@ -67,7 +67,7 @@ const passwordResetLink = async (user) => {
     email: user.email,
     subject: 'Reset Password',
     resetUrl,
-    username: titleCase(user.firstname)
+    username: titleCase(user.name)
   })
   return response
 }

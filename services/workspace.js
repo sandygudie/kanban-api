@@ -4,11 +4,11 @@ const { catchAsyncError } = require('../utils/responseHandler')
 const { v4: uuidv4 } = require('uuid')
 
 const createWorkspaceAccount = catchAsyncError(async (reqUser, body) => {
-  const { name, description } = body
+  const { workspaceName, description } = body
   const { id, email } = reqUser
 
   const newWorkspace = await new Workspace({
-    name,
+    name: workspaceName,
     workspaceAdmin: id,
     description,
     role: 'admin'
@@ -67,10 +67,10 @@ const addAMember = catchAsyncError(async (workspaceId, email) => {
 
 const joinAWorkspace = catchAsyncError(async (body, user) => {
   const updated = {}
-  const { workspaceInviteCode, workspaceName } = body
+  const { inviteCode, workspaceName } = body
   const { id, email } = user
   const workspace = await Workspace.findOne({
-    inviteCode: workspaceInviteCode,
+    inviteCode,
     name: workspaceName
   })
   if (!workspace) {

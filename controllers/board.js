@@ -19,7 +19,8 @@ const getWorkspaceBoards = async (req, res) => {
     if (!workspaceBoards) {
       return errorResponse(res, 400, 'Error retriving board')
     }
-    return successResponse(res, 201, 'Workspace boards retrieved!', workspaceBoards)
+    const temp = workspaceBoards
+    return successResponse(res, 201, 'Workspace boards retrieved!', temp)
   } catch (error) {
     return errorResponse(res, 400, error.message)
   }

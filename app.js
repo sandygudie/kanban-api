@@ -8,7 +8,12 @@ const cookieParser = require('cookie-parser')
 const app = express()
 
 connectToDB()
-app.use(cors())
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true
+}
+app.use(cors(corsOptions))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

@@ -1,12 +1,12 @@
 const { errorResponse, successResponse } = require('../utils/responseHandler')
 const { columnValidation } = require('../utils/validators')
-const { createAColumn, updateAColumn, deleteAColumn } = require('../services/column')
+const { createAColumn, updateAColumn, deleteAColumn, getAColumn } = require('../services/column')
 
 const createColumn = async (req, res) => {
   const { error } = columnValidation(req.body)
   if (error) return errorResponse(res, 400, error.details[0].message)
   try {
-    const columnDetails = await createAColumn(req.body.name, req.params.boardId)
+    const columnDetails = await createAColumn(req.body.column, req.params.boardId)
     if (!columnDetails) {
       return errorResponse(res, 400, 'Error creating column')
     }
@@ -19,6 +19,7 @@ const createColumn = async (req, res) => {
 const updateColumn = async (req, res) => {
   try {
     const updatedColumn = await updateAColumn(req.params.columnId, req.body)
+
     if (!updatedColumn) {
       return errorResponse(res, 400, 'Error updating column or column does not exist')
     }
@@ -40,8 +41,20 @@ const deleteColumn = async (req, res) => {
   }
 }
 
+const getColumn = async (req, res) => {
+  try {
+    const updatedColumn = await getAColumn(req.params.column)
+    if (!updatedColumn) {
+      return errorResponse(res, 400, 'Error retriving column')
+    }
+    return successResponse(res, 200, 'Column retrived ')
+  } catch (error) {
+    return errorResponse(res, 400, error.message)
+  }
+}
 module.exports = {
   createColumn,
   updateColumn,
-  deleteColumn
+  deleteColumn,
+  getColumn
 }
