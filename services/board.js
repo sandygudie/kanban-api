@@ -32,13 +32,11 @@ const allBoards = async (workspaceId) => {
     _id: workspaceId
   }).populate({
     path: 'boards',
-    select: '_id name columns',
+    select: '_id name columns description createdAt',
     populate: {
       path: 'columns',
-      select: '_id name tasks',
       populate: {
         path: 'tasks'
-        // select: '_id title subtasks'
       }
     }
   })
