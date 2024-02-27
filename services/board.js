@@ -36,11 +36,22 @@ const allBoards = async (workspaceId) => {
     populate: {
       path: 'columns',
       populate: {
-        path: 'tasks'
+        path: 'tasks',
+        options: { sort: { updatedAt: -1 } }
       }
     }
   })
   return workspace
+}
+
+const getABoard = async (boardId) => {
+  const board = await Board.findOne({ _id: boardId }).populate({
+    path: 'columns',
+    populate: {
+      path: 'tasks'
+    }
+  })
+  return board
 }
 
 const updateABoard = async (boardId, body) => {
@@ -64,5 +75,6 @@ module.exports = {
   createABoard,
   allBoards,
   updateABoard,
-  deleteABoard
+  deleteABoard,
+  getABoard
 }

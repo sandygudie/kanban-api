@@ -19,8 +19,7 @@
       "
     >
       <div style="font-size: 20px; padding: 30px 40px">
-        <p style="text-align: left; font-size: 20px; margin:0; font-weight: 500">Hi,</p>
-
+        <p style="text-align: left; font-size: 20px; margin: 0; font-weight: 500">Hi,</p>
         <p
           style="
             padding-top: 0.5em;
@@ -33,12 +32,13 @@
           Workspace Invite!
         </p>
         <p style="color: #000000; font-size: 18px">
-          <%= workspaceName %> is inviting you to their workspace. Accept invite to sign up or login with this email
-          to join the workspace.
+          <%= workspaceName %> is inviting you to their workspace. Login
+and join workspace with the details below.
         </p>
+
         <div style="margin: auto; text-align: center; padding: 0.5em">
-          <p style="font-weight: bold;margin:0">Workspace Name: <%= workspaceName %></p>
-          <p style="font-weight: bold;margin:0">Invite Code: <%= inviteCode %></p>
+          <p style="font-weight: bold; margin: 0">Workspace Name: <%= workspaceName %></p>
+          <p style="font-weight: bold; margin: 0">Invite Code: <%= inviteCode %></p>
         </div>
 
         <div style="text-align: center; color: white !important; margin-top: 10px">
@@ -59,7 +59,15 @@
             Accept Invite</a
           >
         </div>
-      </div>
+        
+        <%if (inviteNote) { %>
+          <div>
+            <p>Additional note</p>
+            <span> <%= inviteNote %> </span>
+          </div>
+        </div>
+          <% } %>
+       
 
       <p style="padding: 30px 40px; font-size: 16px; color: black">
         If you did not take this action, please

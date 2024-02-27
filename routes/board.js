@@ -3,7 +3,8 @@ const {
   createBoard,
   getWorkspaceBoards,
   updateBoard,
-  deleteBoard
+  deleteBoard,
+  getBoard
 } = require('../controllers/board')
 const {
   verifyUser,
@@ -14,6 +15,7 @@ const {
 const boardRouter = Router()
 boardRouter.post('/:workspaceId', verifyUser, verifyWorkspaceAdmin, createBoard)
 boardRouter.get('/:workspaceId', verifyUser, verifyWorkspaceMember, getWorkspaceBoards)
+boardRouter.get('/:workspaceId/:boardId', verifyUser, verifyWorkspaceAdmin, getBoard)
 boardRouter.patch('/:workspaceId/:boardId', verifyUser, verifyWorkspaceAdmin, updateBoard)
 boardRouter.delete('/:workspaceId/:boardId', verifyUser, verifyWorkspaceAdmin, deleteBoard)
 

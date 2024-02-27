@@ -10,7 +10,10 @@ const createTask = async (req, res) => {
     if (!taskDetails) {
       return errorResponse(res, 400, 'No Column existing')
     }
-    return successResponse(res, 201, 'Task created!', { taskId: taskDetails })
+    return successResponse(res, 201, 'Task created!', {
+      taskId: taskDetails._id,
+      columnId: taskDetails.columnId
+    })
   } catch (error) {
     return errorResponse(res, 400, error.message)
   }
@@ -46,7 +49,8 @@ const getTask = async (req, res) => {
     if (!task) {
       return errorResponse(res, 400, 'Error retriving task')
     }
-    return successResponse(res, 200, 'Task retrieved')
+
+    return successResponse(res, 200, 'Task retrieved', task)
   } catch (error) {
     return errorResponse(res, 400, error.message)
   }

@@ -1,6 +1,12 @@
 const { errorResponse, successResponse } = require('../utils/responseHandler')
 const { boardValidation } = require('../utils/validators')
-const { createABoard, allBoards, updateABoard, deleteABoard } = require('../services/board')
+const {
+  createABoard,
+  allBoards,
+  updateABoard,
+  deleteABoard,
+  getABoard
+} = require('../services/board')
 
 const createBoard = async (req, res) => {
   const { error } = boardValidation(req.body)
@@ -21,6 +27,17 @@ const getWorkspaceBoards = async (req, res) => {
     }
     const temp = workspaceBoards
     return successResponse(res, 201, 'Workspace boards retrieved!', temp)
+  } catch (error) {
+    return errorResponse(res, 400, error.message)
+  }
+}
+const getBoard = async (req, res) => {
+  try {
+    const board = await getABoard(req.params.boardId)
+    if (!board) {
+      return errorResponse(res, 400, 'Error retriving board')
+    }
+    return successResponse(res, 201, 'Board retrieved!', board)
   } catch (error) {
     return errorResponse(res, 400, error.message)
   }
@@ -54,5 +71,6 @@ module.exports = {
   createBoard,
   getWorkspaceBoards,
   updateBoard,
+  getBoard,
   deleteBoard
 }

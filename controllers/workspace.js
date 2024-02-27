@@ -1,5 +1,9 @@
 const { errorResponse, successResponse } = require('../utils/responseHandler')
-const { workspaceValidation, ValidEmail, joinWorkspaceValidation } = require('../utils/validators')
+const {
+  workspaceValidation,
+  workspaceInviteValidation,
+  joinWorkspaceValidation
+} = require('../utils/validators')
 const { workspaceInvite } = require('../utils/sendEmail/emailHandler')
 const {
   createWorkspaceAccount,
@@ -44,7 +48,7 @@ const updateAWorkspace = async (req, res) => {
 }
 
 const addWorkspaceMember = async (req, res) => {
-  const { error } = ValidEmail(req.body)
+  const { error } = workspaceInviteValidation({ email: req.body.email })
   if (error) return errorResponse(res, 400, error.details[0].message)
   try {
     const updated = await addAMember(req.params.workspaceId, req.body.email)
@@ -54,7 +58,8 @@ const addWorkspaceMember = async (req, res) => {
     const response = await workspaceInvite({
       email: req.body.email,
       inviteCode: updated.inviteCode,
-      name: updated.name
+      workspaceName: updated.name,
+      inviteNote: req.body.inviteNote
     })
 
     if (response.message) {
@@ -77,12 +82,15 @@ const joinWorkspace = async (req, res) => {
     } else if (joinedMember.emailError) {
       return errorResponse(res, 400, joinedMember.emailError)
     } else {
-      return successResponse(res, 200, 'Join Workspace succesful!', joinedMember.workspace)
+      return successResponse(res, 200, 'Join Workspace succesful!', {
+        workspaceId: joinedMember.workspace._id
+      })
     }
   } catch (error) {
     return errorResponse(res, 400, error.message)
   }
 }
+
 const deleteMemberWorkspace = async (req, res) => {
   try {
     const updatedWorkspace = await removeAMember(req.params)

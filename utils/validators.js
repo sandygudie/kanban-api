@@ -31,9 +31,10 @@ function joinWorkspaceValidation(data) {
   })
   return schema.validate(data)
 }
-function ValidEmail(data) {
+function workspaceInviteValidation(data) {
   const schema = Joi.object({
     email: Joi.string().email().required().lowercase().trim().label('Email')
+    // inviteNote: Joi.string().trim()
   })
   return schema.validate(data)
 }
@@ -75,7 +76,7 @@ module.exports = {
   registerValidation,
   loginValidation,
   workspaceValidation,
-  ValidEmail,
+  workspaceInviteValidation,
   joinWorkspaceValidation,
   boardValidation,
   columnValidation,

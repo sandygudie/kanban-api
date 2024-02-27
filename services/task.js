@@ -27,7 +27,7 @@ const createATask = async (body, columnId) => {
 }
 
 const updateATask = async (taskId, body) => {
-  const updatedTask = await Task.findByIdAndUpdate(taskId, body, {
+  const updatedTask = Task.findByIdAndUpdate(taskId, body, {
     new: true,
     runValidators: true,
     context: 'query'
@@ -48,6 +48,7 @@ const deleteATask = async (params) => {
 }
 
 const getATask = async (taskId) => {
+  // console.log(taskId)
   const task = await Task.findById(taskId)
   return task
 }

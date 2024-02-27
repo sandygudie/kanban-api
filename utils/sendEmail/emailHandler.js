@@ -28,11 +28,12 @@ const sendEmail = async (options) => {
         resetUrl
       })
     } else {
-      const { workspaceName, inviteCode, inviteLink } = options
+      const { workspaceName, inviteCode, inviteLink, inviteNote } = options
       data = await ejs.renderFile(path.join(__dirname, '/templates/workspaceinvite.ejs'), {
         workspaceName,
         inviteCode,
-        inviteLink
+        inviteLink,
+        inviteNote
       })
     }
     const mailOptions = {
@@ -72,13 +73,14 @@ const passwordResetLink = async (user) => {
   return response
 }
 
-const workspaceInvite = async (workspace) => {
-  const inviteLink = 'https://kanban.netlify.app/register'
+const workspaceInvite = async (invite) => {
+  const inviteLink = 'http://localhost:3000/login'
   const response = await sendEmail({
-    email: workspace.email,
+    email: invite.email,
     subject: 'Workspace Invite',
-    workspaceName: workspace.name,
-    inviteCode: workspace.inviteCode,
+    workspaceName: invite.workspaceName,
+    inviteCode: invite.inviteCode,
+    inviteNote: invite.inviteNote,
     inviteLink
   })
   return response

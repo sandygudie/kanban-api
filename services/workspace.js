@@ -7,19 +7,21 @@ const createWorkspaceAccount = catchAsyncError(async (reqUser, body) => {
   const { workspaceName, description } = body
   const { id, email } = reqUser
 
+  const user = await User.findOne({
+    _id: id
+  })
+
   const newWorkspace = await new Workspace({
     name: workspaceName,
     workspaceAdmin: id,
     description,
-    role: 'admin'
+    role: 'admin',
+    createdBy: user.name
   })
   newWorkspace.inviteCode = uuidv4().substring(0, 6)
-  newWorkspace.members.push({ userId: id, email, role: 'admin' })
-  const workspaceDetails = await newWorkspace.save()
+  newWorkspace.members.push({ userId: id, email, role: 'admin', name: user.name })
 
-  const user = await User.findOne({
-    _id: id
-  })
+  const workspaceDetails = await newWorkspace.save()
   user.workspace = user.workspace.concat(workspaceDetails._id)
   await user.save()
   return workspaceDetails
@@ -80,13 +82,14 @@ const joinAWorkspace = catchAsyncError(async (body, user) => {
     if (!isUserEmail) {
       updated.emailError = 'Request admin invite'
     } else {
-      workspace.pendingMembers = workspace.pendingMembers.filter((ele) => ele !== email)
-      workspace.members.push({ userId: id, role: 'member' })
-      await workspace.save()
-      updated.workspace = workspace
       const user = await User.findOne({
         _id: id
       })
+      workspace.pendingMembers = workspace.pendingMembers.filter((ele) => ele !== email)
+      workspace.members.push({ userId: id, role: 'member', email, name: user.name })
+      await workspace.save()
+      updated.workspace = workspace
+
       user.workspace = user.workspace.concat(workspace._id)
       await user.save()
     }

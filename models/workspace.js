@@ -20,6 +20,7 @@ const workspaceSchema = Schema(
       new Schema(
         {
           userId: String,
+          name: String,
           email: String,
           role: {
             type: String,
@@ -32,6 +33,7 @@ const workspaceSchema = Schema(
     ],
     pendingMembers: [String],
     profilePics: String,
+    createdBy: String,
     boards: [{ type: Schema.Types.ObjectId, ref: 'Board' }]
   },
   { timestamps: true },
