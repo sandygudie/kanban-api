@@ -15,6 +15,8 @@ const createWorkspaceAccount = catchAsyncError(async (reqUser, body) => {
     name: workspaceName,
     workspaceAdmin: id,
     description,
+    profilePics:
+      'https://res.cloudinary.com/dvpoiwd0t/image/upload/v1709064575/workspace-placeholder_urnll6.webp',
     role: 'admin',
     createdBy: user.name
   })

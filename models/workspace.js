@@ -13,6 +13,9 @@ const workspaceSchema = Schema(
     description: {
       type: String
     },
+    createdBy: {
+      type: String
+    },
     inviteCode: {
       type: String
     },
@@ -33,7 +36,7 @@ const workspaceSchema = Schema(
     ],
     pendingMembers: [String],
     profilePics: String,
-    createdBy: String,
+
     boards: [{ type: Schema.Types.ObjectId, ref: 'Board' }]
   },
   { timestamps: true },
