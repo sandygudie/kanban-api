@@ -6,18 +6,20 @@ const createAColumn = async (column, boardId) => {
   if (!verifyBoard) {
     return null
   }
-  const newColumn = column.map(async (col) => {
-    const newColumn = await new Column({
-      name: col,
-      boardId
-    })
-    const columnArray = await newColumn.save()
-    const board = await Board.findOne({ _id: boardId })
-    await board.columns.push(columnArray)
-    await board.save()
-    return newColumn
-  })
 
+  const newColumn = await Promise.all(
+    column.map((col) =>
+      Column.create({
+        name: col,
+        boardId
+      })
+    )
+  )
+  const board = await Board.findOne({ _id: boardId })
+  newColumn.map(async (col) => {
+    await board.columns.push(col)
+  })
+  await board.save()
   return newColumn
 }
 

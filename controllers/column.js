@@ -10,7 +10,10 @@ const createColumn = async (req, res) => {
     if (!columnDetails) {
       return errorResponse(res, 400, 'Error creating column')
     }
-    return successResponse(res, 201, 'Column created!', { columnId: columnDetails._id })
+    columnDetails.map((col) => {
+      return { _id: col._id, name: col.name, tasks: col.tasks }
+    })
+    return successResponse(res, 201, 'Column created!', columnDetails)
   } catch (error) {
     return errorResponse(res, 400, error.message)
   }
