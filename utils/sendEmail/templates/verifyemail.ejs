@@ -1,77 +1,88 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=9, IE=8, IE=7, IE=EDGE" />
     <title>Verify Email</title>
-    <style>
+    <style type="text/css">
+      @font-face {
+        font-family: 'Lexend';
+        font-weight: 400;
+        src: url('https://res.cloudinary.com/dsjxfieim/raw/upload/v1652861310/Lexend-Light_ult5c2.ttf')
+          format('opentype');
+        font-display: swap;
+      }
       *,
       *:before,
       *:after {
+        font-family: 'Lexend', 'Roboto', sans-serif;
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
+
       body {
         padding: 1em;
-        font-family: Geneva, Tahoma, sans-serif;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
       }
+
       .container {
         border-radius: 1em;
         background-color: #e5f0f0;
         max-width: 900px;
         margin: auto;
-        padding:2em
+        padding: 2em;
       }
       .sub_container {
         padding: 2em 0em;
         background-color: white;
         border-radius: 1em;
         margin: auto;
-        color:black
+        color: black;
       }
       .img_container {
+        margin: 0.5em 0em;
         width: 100%;
         text-align: center;
       }
       .message_icon {
-        height: 80px;
-        width: 80px;
+        height: 180px;
+        width: 180px;
       }
       .heading_text {
         padding: 15px 40px;
         font-size: 25px;
         font-weight: 600;
-        border-bottom: 1px solid #d1f1f1;
+        text-align: center;
         color: #008b8b;
       }
       .salutation {
         text-align: left;
         font-size: 18px;
-        font-weight: 600;
-        padding-top: 30px;
-        font-weight: 500;
+        font-weight: 400;
       }
       .message_container {
         font-size: 20px;
-        padding: 0px 40px;
+        padding: 0px 60px;
       }
       .message_content {
         color: black;
         padding-top: 1em;
         font-weight: 400;
-        font-size: 17px;
-        text-align: justify;
+        font-size: 18px;
+        text-align: left;
         line-height: 1.5em;
       }
       .btn_container {
         text-align: center;
-        color: white !important;
         margin-top: 1.5em;
       }
       .verify_button {
@@ -84,10 +95,10 @@
         font-weight: 600;
         background-color: #008b8b;
         color: white !important;
-        font-size: medium;
+        font-size: 20px;
       }
       .footer {
-        padding: 40px 0 0 40px;
+        padding: 40px 0 20px 40px;
         font-size: 13px;
         color: black;
       }
@@ -97,8 +108,14 @@
   <body>
     <div class="container">
       <div class="sub_container">
-        <p class="heading_text">Email Verification</p>
         <div class="message_container">
+          <div class="img_container">
+            <img
+              class="message_icon"
+              src="https://res.cloudinary.com/dvpoiwd0t/image/upload/v1709390259/verify-email_gbc5z3.png"
+            />
+          </div>
+          <p class="heading_text">Email Verification</p>
           <p class="salutation">Hi <%= username %>,</p>
 
           <p class="message_content">
