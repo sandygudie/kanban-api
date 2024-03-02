@@ -5,74 +5,117 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Verify Email</title>
-    <style></style>
+    <style>
+      *,
+      *:before,
+      *:after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        padding: 1em;
+        font-family: Geneva, Tahoma, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .container {
+        border-radius: 1em;
+        background-color: #e5f0f0;
+        max-width: 900px;
+        margin: auto;
+        padding:2em
+      }
+      .sub_container {
+        padding: 2em 0em;
+        background-color: white;
+        border-radius: 1em;
+        margin: auto;
+        color:black
+      }
+      .img_container {
+        width: 100%;
+        text-align: center;
+      }
+      .message_icon {
+        height: 80px;
+        width: 80px;
+      }
+      .heading_text {
+        padding: 15px 40px;
+        font-size: 25px;
+        font-weight: 600;
+        border-bottom: 1px solid #d1f1f1;
+        color: #008b8b;
+      }
+      .salutation {
+        text-align: left;
+        font-size: 18px;
+        font-weight: 600;
+        padding-top: 30px;
+        font-weight: 500;
+      }
+      .message_container {
+        font-size: 20px;
+        padding: 0px 40px;
+      }
+      .message_content {
+        color: black;
+        padding-top: 1em;
+        font-weight: 400;
+        font-size: 17px;
+        text-align: justify;
+        line-height: 1.5em;
+      }
+      .btn_container {
+        text-align: center;
+        color: white !important;
+        margin-top: 1.5em;
+      }
+      .verify_button {
+        width: 300px;
+        margin: auto;
+        display: block;
+        text-decoration: none;
+        padding: 0.8em 2em;
+        border-radius: 6px;
+        font-weight: 600;
+        background-color: #008b8b;
+        color: white !important;
+        font-size: medium;
+      }
+      .footer {
+        padding: 40px 0 0 40px;
+        font-size: 13px;
+        color: black;
+      }
+    </style>
   </head>
 
-  <body style="background-color: #008b8b12; padding: 1em">
-    <div
-      style="
-        background-color: white;
-        margin: auto;
-        max-width: 900px;
-        font-family:
-          sans-serif 'Open Sans',
-          'Helvetica Neue';
-      "
-    >
-      <p
-        style="
-          border-bottom: 0.1px solid #008b8b2b;
-          padding: 30px 0px 10px 40px;
-          color: #008b8b;
-          font-size: 28px;
-          font-weight: bolder;
-        "
-      >
-        Email Verification
-      </p>
-      <div style="font-size: 20px; padding: 0px 40px">
-        <p style="text-align: left; font-size: 20px; font-weight: 500">Hi <%= username %>,</p>
+  <body>
+    <div class="container">
+      <div class="sub_container">
+        <p class="heading_text">Email Verification</p>
+        <div class="message_container">
+          <p class="salutation">Hi <%= username %>,</p>
 
-        <p
-          style="
-            padding-top: 0.5em;
-            font-weight: 700;
-            color: #008b8b;
-            font-size: 20px;
-            text-align: center;
-          "
-        >
-          Thank you for signing up on Kanban!
-        </p>
-        <p style="color: #000000; font-size: 20px">
-          Click on the button below to verify your email address and start using your account. Link
-          expires in 30 minutes.
-        </p>
+          <p class="message_content">
+            Thank you for signing up on Kanban! Click on the button below to verify your email
+            address. Link expires in 30 minutes.
+          </p>
 
-        <div style="text-align: center; color: white !important; margin-top: 10px">
-          <a
-            style="
-              width: 200px;
-              margin: auto;
-              display: block;
-              text-decoration: none;
-              padding: 0.8em 2em;
-              border-radius: 6px;
-              font-weight: bolder;
-              background-color: #008b8b;
-              color: white !important;
-            "
-            href="<%= verificationUrl %>"
-          >
-            Verify Email</a
-          >
+          <div class="btn_container">
+            <a class="verify_button" href="<%= verificationUrl %>"> Verify Email</a>
+          </div>
+        </div>
+
+        <div class="footer">
+          If you did not take this action, please
+          <a style="text-decoration: none; color: #008b8b" href="/">contact us</a>
         </div>
       </div>
-
-      <p style="padding: 30px 40px; font-size: 16px; color: black">
-        If you did not take this action, please
-        <a style="text-decoration: none; color: #008b8b" href="/">contact us</a>
-      </p>
     </div>
   </body>
 </html>
