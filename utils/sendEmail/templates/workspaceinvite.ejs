@@ -48,9 +48,9 @@
         text-align: center;
       }
       .message_icon {
-        height: 180px;
         width: 180px;
       }
+
       .heading_text {
         padding: 15px 40px;
         font-size: 25px;
@@ -59,29 +59,34 @@
         color: #008b8b;
       }
       .message_container {
-        font-size: 20px;
         padding: 0px 60px;
       }
 
       .message_content {
+        font-size: 20px;
         color: black;
-        padding-top: 1em;
         font-weight: 400;
-        font-size: 18px;
         text-align: left;
         line-height: 1.5em;
       }
+.details{
+  margin-top:1.5em;
+  font-size: 20px;
+  color: black;
+        font-weight: 400;
+        text-align: left;
+}
       .btn_container {
         text-align: center;
-    
-        margin-top: 1.5em;
+        margin-top: 1em;
       }
+
       .action_button {
         width: 300px;
         margin: auto;
         display: block;
         text-decoration: none;
-        padding: 0.8em 2em;
+        padding: 0.6em 2em;
         border-radius: 6px;
         font-weight: 600;
         background-color: #008b8b;
@@ -89,10 +94,13 @@
         font-size: 20px;
       }
       .request_note{
-        margin: 1em 0;
+        margin-top: 2em;
       }
       .request_note p, .request_note span{
-       font-size: 14px;
+       font-size: 17px;
+      }
+      .request_note p{
+        color: #008b8b;
       }
       .footer {
         padding: 40px 0 20px 40px;
@@ -109,7 +117,7 @@
           <div class="img_container">
             <img
               class="message_icon"
-              src="https://res.cloudinary.com/dvpoiwd0t/image/upload/v1709390259/verify-email_gbc5z3.png"
+              src="https://res.cloudinary.com/dvpoiwd0t/image/upload/v1709406839/handshake_mp1ggz.png"
             />
           </div>
           <p class="heading_text">Workspace Invite</p>
@@ -117,25 +125,35 @@
 
           <p class="message_content">
             <%= workspaceName %> is inviting you to join their workspace. Login
-            and join workspace with the details below.
+            and join the workspace with the details below.
           </p>
 
           
-          <div style="margin: 1em 0;">
+          <div class="details">
             <p>Workspace Name: <%= workspaceName %></p>
             <p>Invite Code: <%= inviteCode %></p>
           </div>
           
 
           <div class="btn_container">
-            <a class="verify_button" href="<%= verificationUrl %>"> Verify Email</a>
+            <a class="action_button" href="<%= inviteLink %>"> Login</a>
           </div>
-        </div>
 
+          <%if (inviteNote) { %>
+            <div class="request_note">
+              <p>** Additional note **</p>
+              <span> <%= inviteNote %> </span>
+            </div>
+          </div>
+            <% } %>
+       
+          
+       
         <div class="footer">
           If you did not take this action, please
           <a style="text-decoration: none; color: #008b8b" href="/">contact us</a>
         </div>
+      </div>
       </div>
     </div>
   </body>

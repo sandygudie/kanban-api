@@ -55,6 +55,7 @@ const addWorkspaceMember = async (req, res) => {
     if (!updated) {
       return errorResponse(res, 400, 'Member already in workspace')
     }
+    // console.log(updated)
     const response = await workspaceInvite({
       email: req.body.email,
       inviteCode: updated.inviteCode,

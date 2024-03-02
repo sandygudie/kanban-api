@@ -59,6 +59,7 @@ const addAMember = catchAsyncError(async (workspaceId, email) => {
     _id: workspaceId
   })
   const checkMemberExist = workspace.members.find((ele) => ele.email === email)
+
   if (checkMemberExist) {
     updated = null
   } else {
