@@ -21,7 +21,7 @@ const createBoard = async (req, res) => {
 
 const getWorkspaceBoards = async (req, res) => {
   try {
-    const workspaceBoards = await allBoards(req.params.workspaceId)
+    const workspaceBoards = await allBoards(req.user, req.params.workspaceId)
     if (!workspaceBoards) {
       return errorResponse(res, 400, 'Error retriving board')
     }

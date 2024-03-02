@@ -48,7 +48,6 @@ const deleteATask = async (params) => {
 }
 
 const getATask = async (taskId) => {
-  // console.log(taskId)
   const task = await Task.findById(taskId)
   return task
 }

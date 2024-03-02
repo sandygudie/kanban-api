@@ -1,6 +1,7 @@
 const Board = require('../models/board')
 const Column = require('../models/column')
 const Workspace = require('../models/workspace')
+const User = require('../models/user')
 
 const createABoard = async (body, workspaceId) => {
   const { name, column } = body
@@ -27,7 +28,11 @@ const createABoard = async (body, workspaceId) => {
   return newBoard
 }
 
-const allBoards = async (workspaceId) => {
+const allBoards = async (reqUser, workspaceId) => {
+  const { id } = reqUser
+  const user = await User.findOne({
+    _id: id
+  })
   const workspace = await Workspace.findById({
     _id: workspaceId
   }).populate({
@@ -41,7 +46,13 @@ const allBoards = async (workspaceId) => {
       }
     }
   })
-  return workspace
+  const userDetails = {
+    userid: user._id,
+    username: user.name,
+    profilePics: user.profilePics,
+    email: user.email
+  }
+  return { workspace, userDetails }
 }
 
 const getABoard = async (boardId) => {
