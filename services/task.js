@@ -2,21 +2,20 @@ const Column = require('../models/column')
 const Task = require('../models/task')
 
 const createATask = async (body, columnId) => {
-  const { title, subtasks, description, assignTo, deadline } = body
+  const { title, subtasks, description } = body
   const isColumnExisting = await Column.findOne({ _id: columnId })
   if (isColumnExisting) {
     const newTask = await new Task({
       title,
       description,
-      assignTo,
-      deadline,
       columnId
     })
 
     newTask.subtasks = subtasks
     newTask.status = isColumnExisting.name
+    newTask.dueDate = newTask.dueDate.concat([Date.now(), Date.now()])
+    console.log(newTask)
     const taskDetails = await newTask.save()
-
     const column = await Column.findOne({ _id: columnId })
     column.tasks.push(taskDetails)
     await column.save()

@@ -8,8 +8,17 @@ const taskSchema = Schema(
     },
     description: String,
     status: String,
-    assignTo: String,
-    deadline: Date,
+    assignTo: [
+      new Schema(
+        {
+          userId: String,
+          profilePics: String
+        },
+        { _id: false }
+      )
+    ],
+    dueDate: [],
+    dueTime: String,
     subtasks: [
       new Schema({
         title: String,

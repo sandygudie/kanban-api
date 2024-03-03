@@ -4,7 +4,7 @@ const Workspace = require('../models/workspace')
 const getAllUserWorkspaces = async (id) => {
   const userWorkspaces = await User.findOne({
     _id: id
-  }).populate({ path: 'workspace', select: '_id name members' })
+  }).populate({ path: 'workspace', select: '_id name members profilePics' })
   return userWorkspaces
 }
 const updateAUser = async (userId, body) => {

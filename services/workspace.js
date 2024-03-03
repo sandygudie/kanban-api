@@ -6,7 +6,6 @@ const { v4: uuidv4 } = require('uuid')
 const createWorkspaceAccount = catchAsyncError(async (reqUser, body) => {
   const { workspaceName, description } = body
   const { id, email } = reqUser
-
   const user = await User.findOne({
     _id: id
   })
@@ -22,7 +21,13 @@ const createWorkspaceAccount = catchAsyncError(async (reqUser, body) => {
   })
 
   newWorkspace.inviteCode = uuidv4().substring(0, 6)
-  newWorkspace.members.push({ userId: id, email, role: 'admin', name: user.name })
+  newWorkspace.members.push({
+    userId: id,
+    email,
+    role: 'admin',
+    name: user.name,
+    profilePics: user.profilePics
+  })
 
   const workspaceDetails = await newWorkspace.save()
   user.workspace = user.workspace.concat(workspaceDetails._id)
