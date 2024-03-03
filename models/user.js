@@ -14,7 +14,7 @@ const userSchema = Schema(
       type: String,
       required: true
     },
-    profilepics: {
+    profilePics: {
       type: String
     },
     workspace: [

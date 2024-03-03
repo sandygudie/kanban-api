@@ -12,7 +12,9 @@ const {
   addAMember,
   joinAWorkspace,
   removeAMember,
-  deleteAWorkspace
+  deleteAWorkspace,
+  removeAMemberPending,
+  updateAMemberRole
 } = require('../services/workspace')
 
 const createWorkspace = async (req, res) => {
@@ -38,6 +40,18 @@ const getAWorkspace = async (req, res) => {
   }
 }
 
+const updateMemberRole = async (req, res) => {
+  try {
+    const updatedWorkspace = await updateAMemberRole(req.params.workspaceId, req.params.userId)
+    if (!updatedWorkspace) {
+      return errorResponse(res, 401, 'No workspace or user not in workspace')
+    }
+    return successResponse(res, 200, 'Workspace admin added!', updatedWorkspace)
+  } catch (error) {
+    return errorResponse(res, 400, error.message)
+  }
+}
+
 const updateAWorkspace = async (req, res) => {
   try {
     const updatedWorkspace = await updateWorkspace(req.params.workspaceId, req.body)
@@ -55,7 +69,7 @@ const addWorkspaceMember = async (req, res) => {
     if (!updated) {
       return errorResponse(res, 400, 'Member already in workspace')
     }
-    // console.log(updated)
+
     const response = await workspaceInvite({
       email: req.body.email,
       inviteCode: updated.inviteCode,
@@ -114,6 +128,22 @@ const deleteWorkspace = async (req, res) => {
     return errorResponse(res, 400, error.message)
   }
 }
+
+const removeMemberPending = async (req, res) => {
+  try {
+    const updatedWorkspace = await removeAMemberPending(
+      req.params.workspaceId,
+      req.params.userEmail
+    )
+    if (!updatedWorkspace) {
+      return errorResponse(res, 400, 'Error deleting pending member')
+    }
+    return successResponse(res, 200, 'Pending member deleted')
+  } catch (error) {
+    return errorResponse(res, 400, error.message)
+  }
+}
+
 module.exports = {
   createWorkspace,
   getAWorkspace,
@@ -121,5 +151,7 @@ module.exports = {
   addWorkspaceMember,
   joinWorkspace,
   deleteMemberWorkspace,
-  deleteWorkspace
+  deleteWorkspace,
+  removeMemberPending,
+  updateMemberRole
 }

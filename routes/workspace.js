@@ -6,7 +6,9 @@ const {
   addWorkspaceMember,
   deleteWorkspace,
   joinWorkspace,
-  deleteMemberWorkspace
+  deleteMemberWorkspace,
+  removeMemberPending,
+  updateMemberRole
 } = require('../controllers/workspace')
 const { verifyUser, verifyWorkspaceAdmin } = require('../middlewares/userChecks')
 
@@ -27,5 +29,17 @@ workspaceRouter.delete(
   verifyUser,
   verifyWorkspaceAdmin,
   deleteMemberWorkspace
+)
+workspaceRouter.delete(
+  '/delete-pendingmember/:workspaceId/:userEmail',
+  verifyUser,
+  verifyWorkspaceAdmin,
+  removeMemberPending
+)
+workspaceRouter.patch(
+  '/assign-admin/:workspaceId/:userId',
+  verifyUser,
+  verifyWorkspaceAdmin,
+  updateMemberRole
 )
 module.exports = { workspaceRouter }

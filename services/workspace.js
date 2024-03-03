@@ -20,6 +20,7 @@ const createWorkspaceAccount = catchAsyncError(async (reqUser, body) => {
     role: 'admin',
     createdBy: user.name
   })
+
   newWorkspace.inviteCode = uuidv4().substring(0, 6)
   newWorkspace.members.push({ userId: id, email, role: 'admin', name: user.name })
 
@@ -43,6 +44,29 @@ const getWorkspace = catchAsyncError(async (workspaceId, userId) => {
     return null
   }
 })
+
+const updateAMemberRole = async (workspaceId, userId) => {
+  const workspace = await Workspace.findOne({
+    _id: workspaceId
+  })
+  if (!workspace) {
+    return null
+  }
+
+  const isWorkspaceUser = workspace.members.find((ele) => ele.userId === userId)
+  if (isWorkspaceUser) {
+    workspace.members = workspace.members.map((ele) => {
+      if (ele.userId === userId) {
+        return { ...ele, role: ele.role === 'admin' ? 'member' : 'admin' }
+      }
+      return ele
+    })
+    await workspace.save()
+    return workspace
+  } else {
+    return null
+  }
+}
 
 const updateWorkspace = catchAsyncError(async (workspaceId, body) => {
   const updatedWorkspace = await Workspace.findByIdAndUpdate(workspaceId, body, {
@@ -131,11 +155,21 @@ const removeAMember = catchAsyncError(async (params) => {
   return updated
 })
 
-const deleteAWorkspace = catchAsyncError(async (workspaceId, userId) => {
+const removeAMemberPending = async (workspaceId, userEmail) => {
+  const workspace = await Workspace.findOne({
+    _id: workspaceId
+  })
+
+  workspace.pendingMembers = workspace.pendingMembers.filter((ele) => ele !== userEmail)
+  await workspace.save()
+  return workspace
+}
+
+const deleteAWorkspace = async (workspaceId, userId) => {
   const updatedWorkspace = await Workspace.findByIdAndDelete(workspaceId)
   await User.updateOne({ _id: userId }, { $pull: { workspace: workspaceId } })
   return updatedWorkspace
-})
+}
 
 module.exports = {
   createWorkspaceAccount,
@@ -144,5 +178,7 @@ module.exports = {
   addAMember,
   joinAWorkspace,
   removeAMember,
-  deleteAWorkspace
+  deleteAWorkspace,
+  removeAMemberPending,
+  updateAMemberRole
 }
