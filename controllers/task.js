@@ -6,7 +6,7 @@ const createTask = async (req, res) => {
   const { error } = taskValidation(req.body)
   if (error) return errorResponse(res, 400, error.details[0].message)
   try {
-    const taskDetails = await createATask(req.body, req.params.columnId)
+    const taskDetails = await createATask(req.user, req.body, req.params.columnId)
     if (!taskDetails) {
       return errorResponse(res, 400, 'No Column existing')
     }

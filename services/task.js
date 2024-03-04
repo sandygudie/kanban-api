@@ -1,14 +1,19 @@
 const Column = require('../models/column')
 const Task = require('../models/task')
+const User = require('../models/user')
 
-const createATask = async (body, columnId) => {
+const createATask = async (reqUser, body, columnId) => {
   const { title, subtasks, description } = body
+  const user = await User.findOne({
+    _id: reqUser.id
+  })
   const isColumnExisting = await Column.findOne({ _id: columnId })
   if (isColumnExisting) {
     const newTask = await new Task({
       title,
       description,
-      columnId
+      columnId,
+      createdBy: user.name
     })
 
     newTask.subtasks = subtasks

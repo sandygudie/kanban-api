@@ -6,6 +6,12 @@ const taskSchema = Schema(
       type: String,
       required: true
     },
+    piority: {
+      type: String
+    },
+    createdBy: {
+      type: String
+    },
     description: String,
     status: String,
     assignTo: [
