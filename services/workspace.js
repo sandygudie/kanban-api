@@ -4,7 +4,7 @@ const { catchAsyncError } = require('../utils/responseHandler')
 const { v4: uuidv4 } = require('uuid')
 
 const createWorkspaceAccount = catchAsyncError(async (reqUser, body) => {
-  const { workspaceName, description } = body
+  const { workspaceName, profilePics } = body
   const { id, email } = reqUser
   const user = await User.findOne({
     _id: id
@@ -13,9 +13,7 @@ const createWorkspaceAccount = catchAsyncError(async (reqUser, body) => {
   const newWorkspace = await new Workspace({
     name: workspaceName,
     workspaceAdmin: id,
-    description,
-    profilePics:
-      'https://res.cloudinary.com/dvpoiwd0t/image/upload/v1709064575/workspace-placeholder_urnll6.webp',
+    profilePics,
     role: 'admin',
     createdBy: user.name
   })

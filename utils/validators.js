@@ -19,7 +19,7 @@ function loginValidation(data) {
 function workspaceValidation(data) {
   const schema = Joi.object({
     workspaceName: Joi.string().required().trim().label('Workspace name'),
-    description: Joi.string().allow('').optional()
+    profilePics: Joi.string().required()
   })
   return schema.validate(data)
 }

@@ -10,9 +10,6 @@ const workspaceSchema = Schema(
       type: String,
       required: true
     },
-    description: {
-      type: String
-    },
     createdBy: {
       type: String
     },
