@@ -19,7 +19,6 @@ const createATask = async (reqUser, body, columnId) => {
     newTask.subtasks = subtasks
     newTask.status = isColumnExisting.name
     newTask.dueDate = newTask.dueDate.concat([Date.now(), Date.now()])
-    console.log(newTask)
     const taskDetails = await newTask.save()
     const column = await Column.findOne({ _id: columnId })
     column.tasks.push(taskDetails)
