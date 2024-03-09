@@ -24,7 +24,7 @@ const createWorkspaceAccount = catchAsyncError(async (reqUser, body) => {
     email,
     role: 'admin',
     name: user.name,
-    profilePics: user.profilePics
+    profilePics: user.profilePics || null
   })
 
   const workspaceDetails = await newWorkspace.save()

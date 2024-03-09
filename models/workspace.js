@@ -22,6 +22,7 @@ const workspaceSchema = Schema(
           userId: String,
           name: String,
           email: String,
+          profilePics: String,
           role: {
             type: String,
             enum: ['member', 'admin'],

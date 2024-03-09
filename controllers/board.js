@@ -12,8 +12,11 @@ const createBoard = async (req, res) => {
   const { error } = boardValidation(req.body)
   if (error) return errorResponse(res, 400, error.details[0].message)
   try {
-    const boardDetails = await createABoard(req.body, req.params.workspaceId)
-    return successResponse(res, 201, 'Board Created!', { boardId: boardDetails._id })
+    const { newBoard, columns } = await createABoard(req.body, req.params.workspaceId)
+    return successResponse(res, 201, 'Board Created!', {
+      boardId: newBoard._id,
+      values: { name: newBoard.name, columns }
+    })
   } catch (error) {
     return errorResponse(res, 400, error.message)
   }
@@ -31,6 +34,7 @@ const getWorkspaceBoards = async (req, res) => {
     return errorResponse(res, 400, error.message)
   }
 }
+
 const getBoard = async (req, res) => {
   try {
     const board = await getABoard(req.params.boardId)
