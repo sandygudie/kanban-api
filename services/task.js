@@ -3,7 +3,7 @@ const Task = require('../models/task')
 const User = require('../models/user')
 
 const createATask = async (reqUser, body, columnId) => {
-  const { title, subtasks, description } = body
+  const { title, subtasks, description, position } = body
   const user = await User.findOne({
     _id: reqUser.id
   })
@@ -15,13 +15,12 @@ const createATask = async (reqUser, body, columnId) => {
       columnId,
       createdBy: user.name
     })
-
+    console.log(position)
     newTask.subtasks = subtasks
     newTask.status = isColumnExisting.name
-    // newTask.dueDate = newTask.dueDate.concat([Date.now(), Date.now()])
     const taskDetails = await newTask.save()
     const column = await Column.findOne({ _id: columnId })
-    column.tasks.push(taskDetails)
+    column.tasks.splice(position || 0, 0, taskDetails)
     await column.save()
     return taskDetails
   } else {

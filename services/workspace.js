@@ -116,7 +116,13 @@ const joinAWorkspace = catchAsyncError(async (body, user) => {
         _id: id
       })
       workspace.pendingMembers = workspace.pendingMembers.filter((ele) => ele !== email)
-      workspace.members.push({ userId: id, role: 'member', email, name: user.name })
+      workspace.members.push({
+        userId: id,
+        role: 'member',
+        email,
+        name: user.name,
+        profilePics: user.profilePics
+      })
       await workspace.save()
       updated.workspace = workspace
 

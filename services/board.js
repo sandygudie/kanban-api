@@ -50,8 +50,7 @@ const allBoards = async (reqUser, workspaceId) => {
     populate: {
       path: 'columns',
       populate: {
-        path: 'tasks',
-        options: { sort: { updatedAt: -1 } }
+        path: 'tasks'
       }
     }
   })
@@ -61,6 +60,7 @@ const allBoards = async (reqUser, workspaceId) => {
     profilePics: user.profilePics,
     email: user.email
   }
+  workspace.inviteCode = null
   return { workspace, userDetails }
 }
 

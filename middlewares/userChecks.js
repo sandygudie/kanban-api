@@ -38,9 +38,10 @@ const verifyWorkspaceAdmin = async (req, res, next) => {
   if (workspace.workspaceAdmin === req.user.id) {
     return next()
   } else {
-    return errorResponse(res, 401, 'Unauthorized')
+    return errorResponse(res, 403, 'Unauthorized')
   }
 }
+
 const verifyWorkspaceMember = async (req, res, next) => {
   const workspace = await verifyWorkspace(req.params.workspaceId)
   if (!workspace) {

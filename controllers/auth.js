@@ -101,20 +101,32 @@ const logout = async (req, res) => {
 }
 
 const googleLogin = async (req, res) => {
-  const { token } = req.body
+  const { credential, client_id: clientId } = req.body
 
-  client.setCredentials({ access_token: token })
-  const userinfo = await client.request({
-    url: 'https://www.googleapis.com/oauth2/v3/userinfo'
-  })
-  const user = userinfo.data
-  console.log(user)
+  // client.setCredentials({ access_token: token })
+  // const userinfo = await client.request({
+  //   url: 'https://www.googleapis.com/oauth2/v3/userinfo'
+  // })
+  // const user = userinfo.data
+  // console.log(user)
   // try {
   //   const existingUser = await User.findOne(user.email)
   //   if (existingUser) {
 
   //   }
   // } catch (error) {}
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: clientId
+    })
+    const payload = ticket.getPayload()
+    const userId = payload.sub
+    console.log(userId)
+    res.status(200).json({ payload })
+  } catch (err) {
+    res.status(400).json({ err })
+  }
 }
 
 module.exports = {

@@ -66,8 +66,8 @@ function taskValidation(data) {
       .required()
       .label('Subtasks'),
     description: Joi.string().trim().allow('').optional(),
-    assignTo: Joi.string().trim(),
-    deadline: Joi.string().trim()
+    position: Joi.number()
+    // deadline: Joi.string().trim()
   })
   return schema.validate(data)
 }
