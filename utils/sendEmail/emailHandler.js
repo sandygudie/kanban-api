@@ -64,7 +64,7 @@ const emailVerification = async (emailInfo) => {
 }
 
 const passwordReset = async (user) => {
-  const resetUrl = `http://localhost:3000/reset-password/?${user.resetCode}`
+  const resetUrl = `${APP_HOSTNAME}/reset-password/?${user.resetCode}`
   const response = await sendEmail({
     email: user.email,
     subject: 'Reset Password',
@@ -75,7 +75,7 @@ const passwordReset = async (user) => {
 }
 
 const workspaceInvite = async (invite) => {
-  const inviteLink = 'http://localhost:3000/login'
+  const inviteLink = `${APP_HOSTNAME}/login`
   const response = await sendEmail({
     email: invite.email,
     subject: 'Workspace Invite',
