@@ -4,15 +4,16 @@ const { connectToDB } = require('./db/db')
 const middleware = require('./middlewares/error-handler')
 const apiRouter = require('./routes')
 const cookieParser = require('cookie-parser')
-// const { APP_HOSTNAME } = require('./config')
+const { APP_HOSTNAME } = require('./config')
 const app = express()
 
 connectToDB()
 
 const corsOptions = {
-  origin: '*',
+  origin: APP_HOSTNAME,
   credentials: true
 }
+
 app.use(cors(corsOptions))
 
 app.use(express.json())
