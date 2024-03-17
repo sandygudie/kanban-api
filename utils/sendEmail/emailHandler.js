@@ -23,8 +23,9 @@ const sendEmail = async (options) => {
         username
       })
     } else if (options.resetUrl) {
-      const resetUrl = options.resetUrl
+      const { resetUrl, username } = options
       data = await ejs.renderFile(path.join(__dirname, '/templates/resetlink.ejs'), {
+        username,
         resetUrl
       })
     } else {
@@ -62,8 +63,8 @@ const emailVerification = async (emailInfo) => {
   return response
 }
 
-const passwordResetLink = async (user) => {
-  const resetUrl = `https://quizbase.netlify.app/reset-password/?${user.confirmationCode}`
+const passwordReset = async (user) => {
+  const resetUrl = `http://localhost:3000/reset-password/?${user.resetCode}`
   const response = await sendEmail({
     email: user.email,
     subject: 'Reset Password',
@@ -86,4 +87,4 @@ const workspaceInvite = async (invite) => {
   return response
 }
 
-module.exports = { emailVerification, passwordResetLink, workspaceInvite }
+module.exports = { emailVerification, passwordReset, workspaceInvite }

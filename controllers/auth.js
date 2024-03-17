@@ -1,9 +1,11 @@
 const User = require('../models/user')
+const ResetCode = require('../models/resetCode')
+
 const { errorResponse, successResponse } = require('../utils/responseHandler')
 const { registerValidation, loginValidation } = require('../utils/validators')
-const { emailVerification } = require('../utils/sendEmail/emailHandler')
+const { emailVerification, passwordReset } = require('../utils/sendEmail/emailHandler')
 const { generateToken } = require('../middlewares/token')
-const { createAccount } = require('../services/auth')
+const { createAccount, createResetCode } = require('../services/auth')
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client()
 
@@ -93,6 +95,41 @@ const login = async (req, res) => {
   }
 }
 
+const forgotPassword = async (req, res) => {
+  const { email } = req.body
+  const existingUser = await User.findOne({ email })
+
+  if (existingUser) {
+    const { resetCode } = await createResetCode()
+    const emailInfo = {
+      resetCode,
+      name: existingUser.name,
+      email: existingUser.email
+    }
+    const response = await passwordReset(emailInfo)
+    if (response.message) {
+      return errorResponse(res, 500, 'Error sending mail')
+    } else {
+      return successResponse(res, 200, 'Reset link sent to email!')
+    }
+  } else {
+    return errorResponse(res, 403, 'Email does not exist')
+  }
+}
+
+const resetPassword = async (req, res) => {
+  const { password, resetCode } = req.body
+  const isExisting = await ResetCode.findOne({ resetCode })
+  if (isExisting) {
+    const existingUser = await User.findOne({ email: isExisting.email })
+    existingUser.password = password
+    existingUser.save()
+    return errorResponse(res, 200, 'Password reset succesful')
+  } else {
+    return errorResponse(res, 403, 'Invalid Request')
+  }
+}
+
 const logout = async (req, res) => {
   return res
     .clearCookie('access_token')
@@ -134,5 +171,7 @@ module.exports = {
   verifyUserEmail,
   login,
   logout,
-  googleLogin
+  googleLogin,
+  forgotPassword,
+  resetPassword
 }
