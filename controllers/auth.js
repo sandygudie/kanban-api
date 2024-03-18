@@ -1,12 +1,13 @@
 const User = require('../models/user')
 const ResetCode = require('../models/resetCode')
-
+const { v4: uuidv4 } = require('uuid')
 const { errorResponse, successResponse } = require('../utils/responseHandler')
 const { registerValidation, loginValidation } = require('../utils/validators')
 const { emailVerification, passwordReset } = require('../utils/sendEmail/emailHandler')
 const { generateToken } = require('../middlewares/token')
 const { createAccount, createResetCode } = require('../services/auth')
 const { OAuth2Client } = require('google-auth-library')
+
 const client = new OAuth2Client()
 
 const register = async (req, res) => {
@@ -27,7 +28,8 @@ const register = async (req, res) => {
         return errorResponse(res, 400, 'Email already exist')
       }
     } else {
-      const { confirmationCode, newUser } = await createAccount(req.body)
+      const { newUser } = await createAccount(req.body)
+      const confirmationCode = uuidv4()
       newUser.confirmationCode = confirmationCode
       await newUser.save()
       const emailInfo = {
@@ -138,29 +140,35 @@ const logout = async (req, res) => {
 }
 
 const googleLogin = async (req, res) => {
-  const { credential, client_id: clientId } = req.body
+  const { token } = req.body
 
-  // client.setCredentials({ access_token: token })
-  // const userinfo = await client.request({
-  //   url: 'https://www.googleapis.com/oauth2/v3/userinfo'
-  // })
-  // const user = userinfo.data
-  // console.log(user)
-  // try {
-  //   const existingUser = await User.findOne(user.email)
-  //   if (existingUser) {
-
-  //   }
-  // } catch (error) {}
+  client.setCredentials({ access_token: token })
+  const userinfo = await client.request({
+    url: 'https://www.googleapis.com/oauth2/v3/userinfo'
+  })
+  const user = userinfo.data
   try {
-    const ticket = await client.verifyIdToken({
-      idToken: credential,
-      audience: clientId
-    })
-    const payload = ticket.getPayload()
-    const userId = payload.sub
-    console.log(userId)
-    res.status(200).json({ payload })
+    const existingUser = await User.findOne({ email: user.email })
+    if (existingUser) {
+      return errorResponse(res, 400, 'Email already exist')
+    } else {
+      const { newUser } = await createAccount({
+        name: user.name,
+        email: user.email,
+        profilePics: user.picture
+      })
+      newUser.isEmailVerified = user.email_verified
+      await newUser.save()
+      return res
+        .cookie('access_token', token, {
+          httpOnly: false,
+          secure: false,
+          sameSite: 'Lax',
+          expires: new Date(Date.now() + 60 * 60 * 1000)
+        })
+        .status(200)
+        .json({ message: 'Signup Sucessfully!', userId: newUser._id })
+    }
   } catch (err) {
     res.status(400).json({ err })
   }
