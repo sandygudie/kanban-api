@@ -5,9 +5,9 @@ const middleware = require('./middlewares/error-handler')
 const apiRouter = require('./routes')
 const cookieParser = require('cookie-parser')
 const { APP_HOSTNAME } = require('./config')
-// const { job } = require('./cron')
+
 const app = express()
-// job
+
 connectToDB()
 
 const corsOptions = {
