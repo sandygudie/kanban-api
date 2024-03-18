@@ -75,7 +75,7 @@ const login = async (req, res) => {
       .cookie('access_token', accessToken, {
         httpOnly: true,
         sameSite: 'none',
-        secure: 'auto',
+        secure: 'true',
         expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
       })
       .status(200)
@@ -161,7 +161,7 @@ const googleLogin = async (req, res) => {
       .cookie('access_token', accessToken, {
         httpOnly: true,
         sameSite: 'none',
-        secure: 'auto',
+        secure: 'true',
         expires: new Date(Date.now() + 60 * 60 * 1000)
       })
       .status(200)
