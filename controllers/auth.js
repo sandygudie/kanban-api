@@ -58,16 +58,7 @@ const verifyUserEmail = async (req, res) => {
     existingUser.isEmailVerified = 'verified'
     existingUser.expireAt = null
     await existingUser.save()
-    const { accessToken } = await generateToken(existingUser)
-    return res
-      .cookie('access_token', accessToken, {
-        httpOnly: false,
-        secure: false,
-        sameSite: 'Lax',
-        expires: new Date(Date.now() + 60 * 60 * 1000)
-      })
-      .status(200)
-      .json({ message: 'Email Verification Sucessfully!', userId: existingUser._id })
+    return successResponse(res, 200, 'Email Verification Sucessfully!')
   }
   return errorResponse(res, 404, 'Invalid or expired verification link!')
 }
@@ -83,8 +74,8 @@ const login = async (req, res) => {
     return res
       .cookie('access_token', accessToken, {
         httpOnly: false,
-        secure: false,
-        sameSite: 'Lax',
+        secure: true,
+        sameSite: 'none',
         expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
       })
       .status(200)
@@ -162,8 +153,8 @@ const googleLogin = async (req, res) => {
       return res
         .cookie('access_token', token, {
           httpOnly: false,
-          secure: false,
-          sameSite: 'Lax',
+          secure: true,
+          sameSite: 'none',
           expires: new Date(Date.now() + 60 * 60 * 1000)
         })
         .status(200)
