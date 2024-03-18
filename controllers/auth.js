@@ -154,7 +154,6 @@ const googleLogin = async (req, res) => {
       newUser.isEmailVerified = 'verified'
       currentUser = await newUser.save()
     }
-
     return res
       .cookie('access_token', token, {
         httpOnly: false,
@@ -166,8 +165,8 @@ const googleLogin = async (req, res) => {
       .json({
         message: 'Login Sucessfully!',
         userdetails: {
-          userId: currentUser._id ? currentUser._id : existingUser._id,
-          workspace: currentUser._id ? currentUser.workspace : existingUser.workspace
+          userId: currentUser !== undefined ? currentUser._id : existingUser._id,
+          workspace: currentUser !== undefined ? currentUser.workspace : existingUser.workspace
         }
       })
   } catch (err) {

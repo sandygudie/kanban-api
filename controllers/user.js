@@ -2,6 +2,7 @@ const { getAllUserWorkspaces, updateAUser, deleteAUser } = require('../services/
 const { errorResponse, successResponse } = require('../utils/responseHandler')
 
 const getUserWorkspaces = async (req, res) => {
+  console.log(req.user)
   try {
     const userWorkspaces = await getAllUserWorkspaces(req.user.id)
     return successResponse(res, 200, 'User workspaces retrieved!', userWorkspaces)
