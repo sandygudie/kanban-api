@@ -9,8 +9,8 @@ const createAccount = async (body) => {
 
 const createResetCode = async () => {
   const tempCode = uuidv4()
-  const resetCode = await ResetCode.create({ resetCode: tempCode })
-
+  const newResetCode = await ResetCode.create({ resetCode: tempCode })
+  const resetCode = newResetCode.resetCode
   return { resetCode }
 }
 
