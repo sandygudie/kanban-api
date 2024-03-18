@@ -2,7 +2,7 @@ const User = require('../models/user')
 const ResetCode = require('../models/resetCode')
 const { v4: uuidv4 } = require('uuid')
 const { errorResponse, successResponse } = require('../utils/responseHandler')
-const { registerValidation, loginValidation } = require('../utils/validators')
+const { registerValidation, loginValidation, resetValidation } = require('../utils/validators')
 const { emailVerification, passwordReset } = require('../utils/sendEmail/emailHandler')
 const { generateToken } = require('../middlewares/token')
 const { createAccount, createResetCode } = require('../services/auth')
@@ -93,7 +93,7 @@ const forgotPassword = async (req, res) => {
   const existingUser = await User.findOne({ email })
 
   if (existingUser) {
-    const { resetCode } = await createResetCode()
+    const { resetCode } = await createResetCode(email)
     const emailInfo = {
       resetCode,
       name: existingUser.name,
@@ -103,7 +103,7 @@ const forgotPassword = async (req, res) => {
     if (response.message) {
       return errorResponse(res, 500, 'Error sending mail')
     } else {
-      return successResponse(res, 200, 'Reset link sent to email!')
+      return successResponse(res, 200, 'Successful! Reset link sent to email!')
     }
   } else {
     return errorResponse(res, 403, 'Email does not exist')
@@ -112,14 +112,18 @@ const forgotPassword = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   const { password, resetCode } = req.body
-  const isExisting = await ResetCode.findOne({ resetCode })
-  if (isExisting) {
-    const existingUser = await User.findOne({ email: isExisting.email })
+  const { error } = resetValidation(req.body)
+  if (error) return errorResponse(res, 400, error.details[0].message)
+  const isExistingCode = await ResetCode.findOne({ resetCode })
+  if (isExistingCode) {
+    const existingUser = await User.findOne({ email: isExistingCode.email })
     existingUser.password = password
-    existingUser.save()
-    return errorResponse(res, 200, 'Password reset succesful')
+    await existingUser.save()
+    isExistingCode.resetCode = null
+    await isExistingCode.save()
+    return successResponse(res, 200, 'Password reset successful')
   } else {
-    return errorResponse(res, 403, 'Invalid Request')
+    return errorResponse(res, 403, 'Expired Link')
   }
 }
 

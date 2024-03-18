@@ -7,9 +7,9 @@ const createAccount = async (body) => {
   return { newUser }
 }
 
-const createResetCode = async () => {
+const createResetCode = async (email) => {
   const tempCode = uuidv4()
-  const newResetCode = await ResetCode.create({ resetCode: tempCode })
+  const newResetCode = await ResetCode.create({ resetCode: tempCode, email })
   const resetCode = newResetCode.resetCode
   return { resetCode }
 }

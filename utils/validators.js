@@ -16,6 +16,14 @@ function loginValidation(data) {
   return schema.validate(data)
 }
 
+function resetValidation(data) {
+  const schema = Joi.object({
+    resetCode: Joi.string(),
+    password: Joi.string().required().trim().label('Password')
+  })
+  return schema.validate(data)
+}
+
 function workspaceValidation(data) {
   const schema = Joi.object({
     workspaceName: Joi.string().required().trim().label('Workspace name'),
@@ -74,6 +82,7 @@ function taskValidation(data) {
 
 module.exports = {
   registerValidation,
+  resetValidation,
   loginValidation,
   workspaceValidation,
   workspaceInviteValidation,
