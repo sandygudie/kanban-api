@@ -64,7 +64,7 @@ const emailVerification = async (emailInfo) => {
 }
 
 const passwordReset = async (user) => {
-  const resetUrl = `${APP_HOSTNAME}/reset-password/?${user.resetCode}`
+  const resetUrl = `${APP_HOSTNAME}/reset-password/${user.resetCode}`
   const response = await sendEmail({
     email: user.email,
     subject: 'Reset Password',
