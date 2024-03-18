@@ -42,9 +42,6 @@ const userSchema = Schema(
     },
     googleLogin: {
       type: String
-    },
-    githubLogin: {
-      type: String
     }
   },
   {
