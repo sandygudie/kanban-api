@@ -139,27 +139,29 @@ const googleLogin = async (req, res) => {
   })
   const user = userinfo.data
   try {
-    const existingUser = await User.findOne({ email: user.email })
-    if (existingUser) {
-      return errorResponse(res, 400, 'Email already exist')
-    } else {
+    let existingUser = await User.findOne({ email: user.email })
+    if (!existingUser) {
       const { newUser } = await createAccount({
         name: user.name,
         email: user.email,
         profilePics: user.picture
       })
       newUser.isEmailVerified = user.email_verified
-      await newUser.save()
-      return res
-        .cookie('access_token', token, {
-          httpOnly: false,
-          secure: true,
-          sameSite: 'none',
-          expires: new Date(Date.now() + 60 * 60 * 1000)
-        })
-        .status(200)
-        .json({ message: 'Signup Sucessfully!', userId: newUser._id })
+      existingUser = await newUser.save()
     }
+    return res
+      .cookie('access_token', token, {
+        httpOnly: false,
+        secure: true,
+        sameSite: 'none',
+        expires: new Date(Date.now() + 60 * 60 * 1000)
+      })
+      .status(200)
+      .json({
+        message: 'Login Sucessfully!',
+        userId: existingUser._id,
+        workspace: existingUser.workspace
+      })
   } catch (err) {
     res.status(400).json({ err })
   }
