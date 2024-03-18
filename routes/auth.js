@@ -18,6 +18,6 @@ authRouter.post('/login', login)
 authRouter.get('/logout', verifyUser, logout)
 authRouter.post('/google', googleLogin)
 authRouter.post('/forgotpassword', forgotPassword)
-authRouter.post('/resetpassword:resetCode', resetPassword)
+authRouter.post('/resetpassword/:resetCode', resetPassword)
 
 module.exports = { authRouter }
