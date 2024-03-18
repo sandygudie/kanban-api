@@ -73,9 +73,9 @@ const login = async (req, res) => {
     const { accessToken } = await generateToken(existingUser)
     return res
       .cookie('access_token', accessToken, {
+        secure: process.env.NODE_ENV === 'PROD' ? true : 'auto',
         httpOnly: true,
-        sameSite: 'none',
-        secure: 'true',
+        sameSite: process.env.NODE_ENV === 'PROD' ? 'none' : 'lax',
         expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
       })
       .status(200)
@@ -159,10 +159,10 @@ const googleLogin = async (req, res) => {
     )
     return res
       .cookie('access_token', accessToken, {
+        secure: process.env.NODE_ENV === 'PROD' ? true : 'auto',
         httpOnly: true,
-        sameSite: 'none',
-        secure: 'true',
-        expires: new Date(Date.now() + 60 * 60 * 1000)
+        sameSite: process.env.NODE_ENV === 'PROD' ? 'none' : 'lax',
+        expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
       })
       .status(200)
       .json({
