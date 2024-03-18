@@ -154,8 +154,11 @@ const googleLogin = async (req, res) => {
       newUser.isEmailVerified = 'verified'
       currentUser = await newUser.save()
     }
+    const { accessToken } = await generateToken(
+      currentUser !== undefined ? currentUser : existingUser
+    )
     return res
-      .cookie('access_token', token, {
+      .cookie('access_token', accessToken, {
         httpOnly: false,
         sameSite: 'none',
         secure: 'auto',
@@ -170,7 +173,6 @@ const googleLogin = async (req, res) => {
         }
       })
   } catch (err) {
-    console.log(err)
     res.status(400).json({ err })
   }
 }

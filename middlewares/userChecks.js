@@ -6,9 +6,11 @@ const User = require('../models/user')
 
 const verifyUser = async (req, res, next) => {
   const token = req.cookies.access_token
+
   if (!token) {
     return errorResponse(res, 401, 'Unauthorized')
   }
+
   try {
     const decodedToken = jwt.verify(token, ACCESS_TOKEN_JWT_SECRET)
     req.user = decodedToken
@@ -20,6 +22,7 @@ const verifyUser = async (req, res, next) => {
     const user = await User.findOne({
       _id: req.user.id
     })
+
     if (user) {
       return next()
     } else {
