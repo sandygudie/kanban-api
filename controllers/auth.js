@@ -136,37 +136,42 @@ const logout = async (req, res) => {
 
 const googleLogin = async (req, res) => {
   const { token } = req.body
-
   client.setCredentials({ access_token: token })
   const userinfo = await client.request({
     url: 'https://www.googleapis.com/oauth2/v3/userinfo'
   })
   const user = userinfo.data
+
   try {
-    let existingUser = await User.findOne({ email: user.email })
+    const existingUser = await User.findOne({ email: user.email })
+    let currentUser
     if (!existingUser) {
       const { newUser } = await createAccount({
         name: user.name,
         email: user.email,
         profilePics: user.picture
       })
-      newUser.isEmailVerified = user.email_verified
-      existingUser = await newUser.save()
+      newUser.isEmailVerified = 'verified'
+      currentUser = await newUser.save()
     }
+
     return res
       .cookie('access_token', token, {
         httpOnly: false,
-        secure: true,
         sameSite: 'none',
+        secure: 'auto',
         expires: new Date(Date.now() + 60 * 60 * 1000)
       })
       .status(200)
       .json({
         message: 'Login Sucessfully!',
-        userId: existingUser._id,
-        workspace: existingUser.workspace
+        userdetails: {
+          userId: currentUser._id ? currentUser._id : existingUser._id,
+          workspace: currentUser._id ? currentUser.workspace : existingUser.workspace
+        }
       })
   } catch (err) {
+    console.log(err)
     res.status(400).json({ err })
   }
 }

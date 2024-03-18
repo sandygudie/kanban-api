@@ -15,7 +15,6 @@ const createATask = async (reqUser, body, columnId) => {
       columnId,
       createdBy: user.name
     })
-    console.log(position)
     newTask.subtasks = subtasks
     newTask.status = isColumnExisting.name
     const taskDetails = await newTask.save()
