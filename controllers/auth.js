@@ -155,6 +155,10 @@ const googleLogin = async (req, res) => {
       newUser.isEmailVerified = 'verified'
       currentUser = await newUser.save()
     }
+    if (!existingUser.profilePics) {
+      existingUser.profilePics = user.picture
+      await existingUser.save()
+    }
     const { accessToken } = await generateToken(
       currentUser !== undefined ? currentUser : existingUser
     )
