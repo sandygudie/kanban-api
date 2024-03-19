@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const Workspace = require('../models/workspace')
 const ResetCode = require('../models/resetCode')
 const { v4: uuidv4 } = require('uuid')
 const { errorResponse, successResponse } = require('../utils/responseHandler')
@@ -158,6 +159,13 @@ const googleLogin = async (req, res) => {
     if (!existingUser.profilePics) {
       existingUser.profilePics = user.picture
       await existingUser.save()
+
+      existingUser.workspace.map(async (ele) => {
+        const workspace = await Workspace.findOne({ _id: ele._id })
+        const user = await workspace.members.find((item) => item.userId === existingUser._id)
+        user.profilePics = user.picture
+        await workspace.save()
+      })
     }
     const { accessToken } = await generateToken(
       currentUser !== undefined ? currentUser : existingUser
