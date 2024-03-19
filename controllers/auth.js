@@ -73,9 +73,10 @@ const login = async (req, res) => {
     const { accessToken } = await generateToken(existingUser)
     return res
       .cookie('access_token', accessToken, {
-        secure: process.env.NODE_ENV === 'PROD' ? true : 'auto',
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === 'PROD' ? 'none' : 'lax',
+
+        sameSite: 'none',
+        secure: 'auto',
         expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
       })
       .status(200)
