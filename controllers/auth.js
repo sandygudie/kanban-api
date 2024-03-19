@@ -75,7 +75,6 @@ const login = async (req, res) => {
     return res
       .cookie('access_token', accessToken, {
         httpOnly: true,
-
         sameSite: 'none',
         secure: 'auto',
         expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
@@ -156,30 +155,37 @@ const googleLogin = async (req, res) => {
       newUser.isEmailVerified = 'verified'
       currentUser = await newUser.save()
     }
-    if (!existingUser.profilePics) {
-      existingUser.profilePics = user.picture
-      await existingUser.save()
 
-      existingUser.workspace.map(async (ele) => {
-        const workspace = await Workspace.findOne({ _id: ele._id })
-        const user = await workspace.members.find((item) => item.userId === existingUser._id)
-        user.profilePics = user.picture
-        await workspace.save()
-      })
+    let token
+    if (existingUser !== null) {
+      if (!existingUser.profilePics) {
+        existingUser.profilePics = user.picture
+        await existingUser.save()
+        existingUser.workspace.map(async (ele) => {
+          const workspace = await Workspace.findOne({ _id: ele._id })
+          const user = await workspace.members.find((item) => item.userId === existingUser._id)
+          user.profilePics = user.picture
+          await workspace.save()
+        })
+      }
+
+      const { accessToken } = await generateToken(existingUser)
+      token = accessToken
+    } else {
+      const { accessToken } = await generateToken(currentUser)
+      token = accessToken
     }
-    const { accessToken } = await generateToken(
-      currentUser !== undefined ? currentUser : existingUser
-    )
+
     return res
-      .cookie('access_token', accessToken, {
-        secure: process.env.NODE_ENV === 'PROD' ? true : 'auto',
+      .cookie('access_token', token, {
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === 'PROD' ? 'none' : 'lax',
+        sameSite: 'none',
+        secure: 'auto',
         expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
       })
       .status(200)
       .json({
-        message: 'Login Sucessfully!',
+        message: 'Logged in successfully',
         userdetails: {
           userId: currentUser !== undefined ? currentUser._id : existingUser._id,
           workspace: currentUser !== undefined ? currentUser.workspace : existingUser.workspace

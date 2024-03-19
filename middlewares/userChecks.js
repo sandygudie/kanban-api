@@ -6,7 +6,6 @@ const User = require('../models/user')
 
 const verifyUser = async (req, res, next) => {
   const token = req.cookies.access_token
-
   if (!token) {
     return errorResponse(res, 401, 'Unauthorized')
   }

@@ -8,15 +8,13 @@ const { APP_HOSTNAME } = require('./config')
 
 const app = express()
 
-connectToDB()
-
 const corsOptions = {
   origin: APP_HOSTNAME,
   credentials: true
 }
 
 app.use(cors(corsOptions))
-
+connectToDB()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
