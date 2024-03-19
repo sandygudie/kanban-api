@@ -13,10 +13,10 @@ const {
 } = require('../middlewares/userChecks')
 
 const boardRouter = Router()
-boardRouter.post('/:workspaceId', verifyUser, verifyWorkspaceAdmin, createBoard)
+boardRouter.post('/:workspaceId', verifyUser, verifyWorkspaceMember, createBoard)
 boardRouter.get('/:workspaceId', verifyUser, verifyWorkspaceMember, getWorkspaceBoards)
-boardRouter.get('/:workspaceId/:boardId', verifyUser, verifyWorkspaceAdmin, getBoard)
-boardRouter.patch('/:workspaceId/:boardId', verifyUser, verifyWorkspaceAdmin, updateBoard)
+boardRouter.get('/:workspaceId/:boardId', verifyUser, verifyWorkspaceMember, getBoard)
+boardRouter.patch('/:workspaceId/:boardId', verifyUser, verifyWorkspaceMember, updateBoard)
 boardRouter.delete('/:workspaceId/:boardId', verifyUser, verifyWorkspaceAdmin, deleteBoard)
 
 module.exports = { boardRouter }
