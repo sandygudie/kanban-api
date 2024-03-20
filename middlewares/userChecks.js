@@ -5,7 +5,16 @@ const { verifyWorkspace } = require('./workspaceChecks')
 const User = require('../models/user')
 
 const verifyUser = async (req, res, next) => {
-  const token = req.cookies.access_token
+  let token
+  if (req.useragent.isMobile === true) {
+    const bearerToken = req.headers.authorization
+    if (!bearerToken || !(bearerToken.search('Bearer ') === 0)) {
+      return errorResponse(res, 401, 'Unauthorized')
+    }
+    token = bearerToken.split(' ')[1]
+  } else {
+    token = req.cookies.access_token
+  }
   if (!token) {
     return errorResponse(res, 401, 'Unauthorized')
   }
@@ -13,11 +22,6 @@ const verifyUser = async (req, res, next) => {
   try {
     const decodedToken = jwt.verify(token, ACCESS_TOKEN_JWT_SECRET)
     req.user = decodedToken
-
-    // key points: what if you delete your user from the database, that user can continue making request because he was existing on his last login, his subsequent request is just verifying with the jwt secrets
-    // he will be only get to be unauthorized on his next login
-    // this extra database check is to ensure the user is unauthorized on his next request
-    // could this be one reason we have refresh token
     const user = await User.findOne({
       _id: req.user.id
     })

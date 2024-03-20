@@ -72,18 +72,27 @@ const login = async (req, res) => {
   const existingUser = await User.findOne({ email })
   if (existingUser && (await existingUser.comparePassword(password))) {
     const { accessToken } = await generateToken(existingUser)
-    return res
-      .cookie('access_token', accessToken, {
-        httpOnly: false,
-        sameSite: 'none',
-        secure: 'auto',
-        expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
-      })
-      .status(200)
-      .json({
-        message: 'Logged in successfully',
-        userdetails: { userId: existingUser._id, workspace: existingUser.workspace }
-      })
+    const userdetails = {
+      userId: existingUser._id,
+      workspace: existingUser.workspace,
+      access_token: accessToken
+    }
+    if (req.useragent.isMobile) {
+      return successResponse(res, 200, 'Logged in successfully', { userdetails })
+    } else {
+      return res
+        .cookie('access_token', accessToken, {
+          httpOnly: false,
+          sameSite: 'none',
+          secure: 'auto',
+          expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
+        })
+        .status(200)
+        .json({
+          message: 'Logged in successfully',
+          data: { userdetails }
+        })
+    }
   } else {
     return errorResponse(res, 403, 'Invalid username or password')
   }
@@ -175,22 +184,28 @@ const googleLogin = async (req, res) => {
       const { accessToken } = await generateToken(currentUser)
       token = accessToken
     }
+    const userdetails = {
+      userId: currentUser !== undefined ? currentUser._id : existingUser._id,
+      workspace: currentUser !== undefined ? currentUser.workspace : existingUser.workspace,
+      access_token: token
+    }
 
-    return res
-      .cookie('access_token', token, {
-        httpOnly: false,
-        sameSite: 'none',
-        secure: 'auto',
-        expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
-      })
-      .status(200)
-      .json({
-        message: 'Logged in successfully',
-        userdetails: {
-          userId: currentUser !== undefined ? currentUser._id : existingUser._id,
-          workspace: currentUser !== undefined ? currentUser.workspace : existingUser.workspace
-        }
-      })
+    if (req.useragent.isMobile === true) {
+      return successResponse(res, 200, 'Logged in succeully', { userdetails })
+    } else {
+      return res
+        .cookie('access_token', token, {
+          httpOnly: false,
+          sameSite: 'none',
+          secure: 'auto',
+          expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
+        })
+        .status(200)
+        .json({
+          message: 'Logged in successfully',
+          data: { userdetails }
+        })
+    }
   } catch (err) {
     res.status(400).json({ err })
   }

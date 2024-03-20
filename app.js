@@ -5,7 +5,7 @@ const middleware = require('./middlewares/error-handler')
 const apiRouter = require('./routes')
 const cookieParser = require('cookie-parser')
 const { APP_HOSTNAME } = require('./config')
-
+const useragent = require('express-useragent')
 const app = express()
 
 const corsOptions = {
@@ -15,6 +15,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 connectToDB()
+app.use(useragent.express())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
