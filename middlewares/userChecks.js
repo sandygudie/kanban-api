@@ -10,16 +10,15 @@ const verifyUser = async (req, res, next) => {
     const bearerToken = req.headers.authorization
 
     if (!bearerToken || !(bearerToken.search('Bearer ') === 0)) {
-      return errorResponse(res, 401, 'Uuthorized')
+      return errorResponse(res, 401, 'Unauthorized')
     }
     token = bearerToken.split(' ')[1]
   } else {
     token = req.cookies.access_token
-    console.log(token)
   }
 
   if (!token) {
-    return errorResponse(res, 401, 'Unauthoriz')
+    return errorResponse(res, 401, 'Unauthorized')
   }
 
   try {
@@ -36,7 +35,7 @@ const verifyUser = async (req, res, next) => {
       return errorResponse(res, 401, 'User not found')
     }
   } catch {
-    return errorResponse(res, 401, 'authorized')
+    return errorResponse(res, 401, 'Unauthorized')
   }
 }
 
