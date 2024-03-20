@@ -8,19 +8,23 @@ const verifyUser = async (req, res, next) => {
   let token
   if (req.useragent.isMobile === true) {
     const bearerToken = req.headers.authorization
+
     if (!bearerToken || !(bearerToken.search('Bearer ') === 0)) {
-      return errorResponse(res, 401, 'Unauthorized')
+      return errorResponse(res, 401, 'Uuthorized')
     }
     token = bearerToken.split(' ')[1]
   } else {
     token = req.cookies.access_token
+    console.log(token)
   }
+
   if (!token) {
-    return errorResponse(res, 401, 'Unauthorized')
+    return errorResponse(res, 401, 'Unauthoriz')
   }
 
   try {
     const decodedToken = jwt.verify(token, ACCESS_TOKEN_JWT_SECRET)
+
     req.user = decodedToken
     const user = await User.findOne({
       _id: req.user.id
@@ -32,7 +36,7 @@ const verifyUser = async (req, res, next) => {
       return errorResponse(res, 401, 'User not found')
     }
   } catch {
-    return errorResponse(res, 401, 'Unauthorized')
+    return errorResponse(res, 401, 'authorized')
   }
 }
 
