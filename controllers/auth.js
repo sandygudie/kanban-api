@@ -74,12 +74,11 @@ const login = async (req, res) => {
     const { accessToken } = await generateToken(existingUser)
     return res
       .cookie('access_token', accessToken, {
-        httpOnly: true,
+        httpOnly: false,
         sameSite: 'none',
-        secure: 'true',
-        expires: new Date(2030, 0) // one hour
+        secure: 'auto',
+        expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
       })
-
       .status(200)
       .json({
         message: 'Logged in successfully',
@@ -181,8 +180,8 @@ const googleLogin = async (req, res) => {
       .cookie('access_token', token, {
         httpOnly: true,
         sameSite: 'none',
-        secure: 'true',
-        expires: new Date(2030, 0) // one hour
+        secure: 'auto',
+        expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
       })
       .status(200)
       .json({
