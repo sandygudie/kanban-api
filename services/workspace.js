@@ -58,6 +58,14 @@ const updateAMemberRole = async (workspaceId, userId) => {
 
   const isWorkspaceUser = workspace.members.find((ele) => ele.userId === userId)
   if (isWorkspaceUser) {
+    const adminCount = workspace.members.reduce(
+      (counter, { role }) => (role === 'admin' ? (counter += 1) : counter),
+      0
+    )
+    if (adminCount < 2) {
+      const response = 'Assign admin to another member'
+      return response
+    }
     workspace.members = workspace.members.map((ele) => {
       if (ele.userId === userId) {
         return { ...ele, role: ele.role === 'admin' ? 'member' : 'admin' }
@@ -139,11 +147,17 @@ const removeAMember = catchAsyncError(async (params) => {
   const workspace = await Workspace.findOne({
     _id: workspaceId
   })
-  const checkMemberExist = workspace.members.find(
-    (ele) => ele.userId === userId && ele.role === 'member'
-  )
+  const checkMemberExist = workspace.members.find((ele) => ele.userId === userId)
 
   if (checkMemberExist) {
+    const adminCount = workspace.members.reduce(
+      (counter, { role }) => (role === 'admin' ? (counter += 1) : counter),
+      0
+    )
+    if (adminCount < 2) {
+      const response = 'Assign admin to another member'
+      return response
+    }
     await Workspace.updateOne(
       {
         _id: workspaceId

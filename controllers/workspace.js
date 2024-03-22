@@ -46,6 +46,9 @@ const updateMemberRole = async (req, res) => {
     if (!updatedWorkspace) {
       return errorResponse(res, 401, 'No workspace or user not in workspace')
     }
+    if (typeof updatedWorkspace === 'string') {
+      return errorResponse(res, 400, updatedWorkspace)
+    }
     return successResponse(res, 200, 'Workspace admin added!', updatedWorkspace)
   } catch (error) {
     return errorResponse(res, 400, error.message)
@@ -111,6 +114,9 @@ const deleteMemberWorkspace = async (req, res) => {
     const updatedWorkspace = await removeAMember(req.params)
     if (!updatedWorkspace) {
       return errorResponse(res, 400, 'No existing Member')
+    }
+    if (typeof updatedWorkspace === 'string') {
+      return errorResponse(res, 400, updatedWorkspace)
     }
     return successResponse(res, 200, 'Member removed from workspace')
   } catch (error) {
