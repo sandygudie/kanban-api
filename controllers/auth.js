@@ -70,31 +70,35 @@ const login = async (req, res) => {
   if (error) return errorResponse(res, 400, error.details[0].message)
 
   const existingUser = await User.findOne({ email })
-  if (existingUser && (await existingUser.comparePassword(password))) {
-    const { accessToken } = await generateToken(existingUser)
-    const userdetails = {
-      userId: existingUser._id,
-      workspace: existingUser.workspace,
-      access_token: accessToken
-    }
-    if (req.useragent.isMobile) {
-      return successResponse(res, 200, 'Logged in successfully', { userdetails })
+  try {
+    if (existingUser && (await existingUser.comparePassword(password))) {
+      const { accessToken } = await generateToken(existingUser)
+      const userdetails = {
+        userId: existingUser._id,
+        workspace: existingUser.workspace,
+        access_token: accessToken
+      }
+      if (req.useragent.isMobile) {
+        return successResponse(res, 200, 'Logged in successfully', { userdetails })
+      } else {
+        return res
+          .cookie('access_token', accessToken, {
+            httpOnly: false,
+            sameSite: 'none',
+            secure: 'auto',
+            expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
+          })
+          .status(200)
+          .json({
+            message: 'Logged in successfully',
+            data: { userdetails }
+          })
+      }
     } else {
-      return res
-        .cookie('access_token', accessToken, {
-          httpOnly: false,
-          sameSite: 'none',
-          secure: 'auto',
-          expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
-        })
-        .status(200)
-        .json({
-          message: 'Logged in successfully',
-          data: { userdetails }
-        })
+      return errorResponse(res, 403, 'Invalid username or password')
     }
-  } else {
-    return errorResponse(res, 403, 'Invalid username or password')
+  } catch (err) {
+    return errorResponse(res, 403, 'Invalid credentials')
   }
 }
 
