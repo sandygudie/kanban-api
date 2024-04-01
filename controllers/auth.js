@@ -86,7 +86,7 @@ const login = async (req, res) => {
             httpOnly: false,
             sameSite: 'none',
             secure: 'auto',
-            expires: new Date(Date.now() + 120 * 60 * 1000)
+            expires: new Date(Date.now() + 30 * 24 * 3600000)
           })
           .status(200)
           .json({
@@ -210,7 +210,7 @@ const googleLogin = async (req, res) => {
           httpOnly: false,
           sameSite: 'none',
           secure: 'auto',
-          expires: new Date(Date.now() + 120 * 60 * 1000)
+          expires: new Date(Date.now() + 30 * 24 * 3600000)
         })
         .status(200)
         .json({
