@@ -86,7 +86,7 @@ const login = async (req, res) => {
             httpOnly: false,
             sameSite: 'none',
             secure: 'auto',
-            expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
+            expires: new Date(Date.now() + 120 * 60 * 1000)
           })
           .status(200)
           .json({
@@ -158,6 +158,8 @@ const googleLogin = async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ email: user.email })
+
+    let token
     let currentUser
     if (!existingUser) {
       const { newUser } = await createAccount({
@@ -168,27 +170,32 @@ const googleLogin = async (req, res) => {
       newUser.isEmailVerified = 'verified'
       newUser.googleLogin = true
       currentUser = await newUser.save()
+      const { accessToken } = await generateToken(currentUser)
+      token = accessToken
     }
 
-    let token
     if (existingUser !== null) {
       if (!existingUser.profilePics) {
         existingUser.profilePics = user.picture
         await existingUser.save()
+
         existingUser.workspace.map(async (ele) => {
-          const workspace = await Workspace.findOne({ _id: ele._id })
-          const user = await workspace.members.find((item) => item.userId === existingUser._id)
-          user.profilePics = user.picture
+          const workspace = await Workspace.findOne({ _id: ele._id }).populate({
+            path: 'members'
+          })
+
+          const workspaceUser = await workspace.members.find(
+            (item) => item.userId === existingUser._id.toString()
+          )
+
+          workspaceUser.profilePics = existingUser.profilePics
           await workspace.save()
         })
       }
-
       const { accessToken } = await generateToken(existingUser)
       token = accessToken
-    } else {
-      const { accessToken } = await generateToken(currentUser)
-      token = accessToken
     }
+
     const userdetails = {
       userId: currentUser !== undefined ? currentUser._id : existingUser._id,
       workspace: currentUser !== undefined ? currentUser.workspace : existingUser.workspace,
@@ -203,7 +210,7 @@ const googleLogin = async (req, res) => {
           httpOnly: false,
           sameSite: 'none',
           secure: 'auto',
-          expires: new Date(Date.now() + 120 * 60 * 1000) // one hour
+          expires: new Date(Date.now() + 120 * 60 * 1000)
         })
         .status(200)
         .json({
