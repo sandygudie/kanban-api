@@ -166,6 +166,7 @@ const googleLogin = async (req, res) => {
         profilePics: user.picture
       })
       newUser.isEmailVerified = 'verified'
+      newUser.googleLogin = true
       currentUser = await newUser.save()
     }
 

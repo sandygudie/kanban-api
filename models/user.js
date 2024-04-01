@@ -12,7 +12,6 @@ const userSchema = Schema(
     },
     password: {
       type: String
-      // required: true
     },
     profilePics: {
       type: String
@@ -41,14 +40,13 @@ const userSchema = Schema(
       }
     },
     googleLogin: {
-      type: String
+      type: Boolean
     }
   },
   {
     timestamps: true,
     toJSON: {
       transform: (doc, ret, options) => {
-        // console.log(ret)
         delete ret.password
         delete ret.__v
         return ret
