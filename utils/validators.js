@@ -42,7 +42,6 @@ function joinWorkspaceValidation(data) {
 function workspaceInviteValidation(data) {
   const schema = Joi.object({
     email: Joi.string().email().required().lowercase().trim().label('Email')
-    // inviteNote: Joi.string().trim()
   })
   return schema.validate(data)
 }
@@ -75,7 +74,6 @@ function taskValidation(data) {
       .label('Subtasks'),
     description: Joi.string().trim().allow('').optional(),
     position: Joi.number()
-    // deadline: Joi.string().trim()
   })
   return schema.validate(data)
 }

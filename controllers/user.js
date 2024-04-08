@@ -34,8 +34,6 @@ const deleteUser = async (req, res) => {
   }
 }
 
-// you can delete your account as an admin unless you assign the role to someone
-
 module.exports = {
   getUserWorkspaces,
   updateUser,

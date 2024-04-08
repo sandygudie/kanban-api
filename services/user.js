@@ -38,11 +38,10 @@ const updateAUser = async (userId, body) => {
 
 const deleteAUser = async (workspaceId, userId) => {
   await User.findByIdAndDelete(userId)
-
   const workspace = await Workspace.findOne({ _id: workspaceId })
   const user = workspace.members.find((ele) => ele.id === userId)
   if (user.role === 'admin') {
-    // if user is admin of workspace, // he has to assign admin to someone else before deleting
+    return workspace
   } else {
     workspace.members.filter((ele) => ele._id !== userId)
   }

@@ -23,7 +23,6 @@ app.use(cookieParser())
 app.get('/', (req, res) => res.status(200).send({ message: 'Welcome to Track.' }))
 app.use('/api/v1', apiRouter)
 
-// middleware;
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 app.use(middleware.defaultErrorHandler)
