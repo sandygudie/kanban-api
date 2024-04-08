@@ -1,12 +1,9 @@
-## Description
-
-Kanban-API
+## Kanban-API
 
 ### Resources
 
-- Documentation:
-- Demo App:
-- Postman Documentation:
+- Client App: https://kanban-track.vercel.app/
+- Postman Documentation: 
 
 ### Technology/Tools
 
@@ -60,50 +57,44 @@ package.json
 
 ### Environment Setup
 
-- Make sure you have **nodejs v14.17.5** installed by running the following command below. You can install **nodejs** from [here](https://nodejs.org/en/download/) if you don't have it.
+- Make sure you have **nodejs v14.17.5** and above installed. You can install **nodejs** from [here](https://nodejs.org/en/download/) if you don't have it.
 - To check node version
   ```
   node --version
   ```
-- Clone the respository to your local machine using the command
+- Clone the respository to your local machine using the command.
   ```
-  git clone https://github.com/sandygudie/quiz-api.git
+  git clone https://github.com/sandygudie/kanban-api.git
   ```
 - Navigate to the project folder.
-- And open the project with your code editor (VScode recommended)
+   ```
+  cd kanban-api
+  ```
+- You can open the project with your code editor (VScode recommended)
 
 ### Start the server
 
-- Install the package dependencies by running the following command in the terminal `yarn install`
-- Create a `.env` in the project folder, get variables from the `.env.example` file sample and ensure to add the values(e.g MONGODB_URI)
-- To start the server locally, run the command `yarn run dev`
+- Install the package dependencies by running the following command in the terminal `npm install`
+- Create a `.env` in the project folder, get example variables from the `.env.example` file sample and ensure to add the values correctly(e.g MONGODB_URI)
+- To start the server locally, run the command `npm run dev`
 
-### Run Documentation
-
-- Navigate to the documentation folder. `cd documentation`
-- Install Packages `yarn install`
-- To start documentation locally, run the command `yarn start`
 
 ### Formatting for the project
 
 - We're using `eslint` for js linting, and `prettier` for code formatting.
 - Please make it a point to install `eslint` and `prettier` plugins on vscode to aid in your coding process.
-- Run the command to fix all auto-fixable formatting errors in the whole project based on `eslint` rules
-  ```
-  yarn run lint
-  ```
+- Run the command to fix all auto-fixable formatting errors in the whole project based on `eslint` rules.
+   ```
+  npm run lint
+   ```
+
 - Run the command to check and fix file formatting with `prettier`
-  ```
-  yarn run format
-  ```
-- Also Linting has been set up for staged commits in the project.
+   ```
+  npm run format
+   ```
+
+- Also linting has been set up for staged commits in the project.
 
 ### Deployment on Render
 
 - Application is on auto deploy from Github to Render.
-
-## CONTRIBUTING WORKFLOW
-
-- You can contribute to adding questions for the project [login](https://quizbase.netlify.app/login)
-- If you like the project, leave your star.
-- If you would like to complain/suggest/contribute to this project, feel free to open a issue :heart_decoration:
