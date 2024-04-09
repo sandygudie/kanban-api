@@ -3,7 +3,7 @@
 ### Resources
 
 - Client App: https://kanban-track.vercel.app/
-- Postman Documentation: 
+- Postman Documentation:
 
 ### Technology/Tools
 
@@ -67,7 +67,7 @@ package.json
   git clone https://github.com/sandygudie/kanban-api.git
   ```
 - Navigate to the project folder.
-   ```
+  ```
   cd kanban-api
   ```
 - You can open the project with your code editor (VScode recommended)
@@ -78,20 +78,21 @@ package.json
 - Create a `.env` in the project folder, get example variables from the `.env.example` file sample and ensure to add the values correctly(e.g MONGODB_URI)
 - To start the server locally, run the command `npm run dev`
 
-
 ### Formatting for the project
 
 - We're using `eslint` for js linting, and `prettier` for code formatting.
 - Please make it a point to install `eslint` and `prettier` plugins on vscode to aid in your coding process.
 - Run the command to fix all auto-fixable formatting errors in the whole project based on `eslint` rules.
-   ```
+
+  ```
   npm run lint
-   ```
+  ```
 
 - Run the command to check and fix file formatting with `prettier`
-   ```
+
+  ```
   npm run format
-   ```
+  ```
 
 - Also linting has been set up for staged commits in the project.
 
