@@ -14,7 +14,8 @@ const {
   removeAMember,
   deleteAWorkspace,
   removeAMemberPending,
-  updateAMemberRole
+  updateAMemberRole,
+  addSocials
 } = require('../services/workspace')
 
 const createWorkspace = async (req, res) => {
@@ -72,7 +73,6 @@ const addWorkspaceMember = async (req, res) => {
     if (!updated) {
       return errorResponse(res, 400, 'Member already in workspace')
     }
-
     const response = await workspaceInvite({
       email: req.body.email,
       inviteCode: updated.inviteCode,
@@ -150,6 +150,18 @@ const removeMemberPending = async (req, res) => {
   }
 }
 
+const addSocialLinks = async (req, res) => {
+  try {
+    const updatedWorkspace = await addSocials(req.params.workspaceId, req.body)
+    if (!updatedWorkspace) {
+      return errorResponse(res, 400, 'Error adding social links')
+    }
+    return successResponse(res, 200, 'Social links updated')
+  } catch (error) {
+    return errorResponse(res, 400, error.message)
+  }
+}
+
 module.exports = {
   createWorkspace,
   getAWorkspace,
@@ -159,5 +171,6 @@ module.exports = {
   deleteMemberWorkspace,
   deleteWorkspace,
   removeMemberPending,
-  updateMemberRole
+  updateMemberRole,
+  addSocialLinks
 }

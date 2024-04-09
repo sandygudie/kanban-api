@@ -9,7 +9,6 @@ const createWorkspaceAccount = catchAsyncError(async (reqUser, body) => {
   const user = await User.findOne({
     _id: id
   })
-
   const newWorkspace = await new Workspace({
     name: workspaceName,
     workspaceAdmin: id,
@@ -162,10 +161,8 @@ const removeAMember = catchAsyncError(async (params) => {
       {
         _id: workspaceId
       },
-
       { $pull: { members: { userId } } }
     )
-
     const user = await User.findOne({
       _id: userId
     })
@@ -182,7 +179,6 @@ const removeAMemberPending = async (workspaceId, userEmail) => {
   const workspace = await Workspace.findOne({
     _id: workspaceId
   })
-
   workspace.pendingMembers = workspace.pendingMembers.filter((ele) => ele !== userEmail)
   await workspace.save()
   return workspace
@@ -194,6 +190,15 @@ const deleteAWorkspace = async (workspaceId, userId) => {
   return updatedWorkspace
 }
 
+const addSocials = async (workspaceId, body) => {
+  const workspace = await Workspace.findOne({
+    _id: workspaceId
+  })
+  workspace.socialLinks = body
+  await workspace.save()
+  return workspace
+}
+
 module.exports = {
   createWorkspaceAccount,
   getWorkspace,
@@ -203,5 +208,6 @@ module.exports = {
   removeAMember,
   deleteAWorkspace,
   removeAMemberPending,
-  updateAMemberRole
+  updateAMemberRole,
+  addSocials
 }

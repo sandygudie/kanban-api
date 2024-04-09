@@ -8,7 +8,8 @@ const {
   joinWorkspace,
   deleteMemberWorkspace,
   removeMemberPending,
-  updateMemberRole
+  updateMemberRole,
+  addSocialLinks
 } = require('../controllers/workspace')
 const { verifyUser, verifyWorkspaceAdmin } = require('../middlewares/userChecks')
 
@@ -42,4 +43,5 @@ workspaceRouter.patch(
   verifyWorkspaceAdmin,
   updateMemberRole
 )
+workspaceRouter.post('/socials/:workspaceId', verifyUser, verifyWorkspaceAdmin, addSocialLinks)
 module.exports = { workspaceRouter }

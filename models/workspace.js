@@ -16,6 +16,7 @@ const workspaceSchema = Schema(
     inviteCode: {
       type: String
     },
+    socialLinks: [],
     members: [
       new Schema(
         {
