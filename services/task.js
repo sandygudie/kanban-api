@@ -1,20 +1,25 @@
 const Column = require('../models/column')
 const Task = require('../models/task')
 const User = require('../models/user')
+const mongoose = require('mongoose')
 
 const createATask = async (reqUser, body, columnId) => {
-  const { title, subtasks, description, position } = body
+  const { title, subtasks, description, position, taskId } = body
+  const Id = taskId || new mongoose.Types.ObjectId()
+
   const user = await User.findOne({
     _id: reqUser.id
   })
   const isColumnExisting = await Column.findOne({ _id: columnId })
   if (isColumnExisting) {
     const newTask = await new Task({
+      _id: Id,
       title,
       description,
       columnId,
       createdBy: user.name
     })
+
     newTask.subtasks = subtasks
     newTask.status = isColumnExisting.name
     const taskDetails = await newTask.save()

@@ -73,7 +73,8 @@ function taskValidation(data) {
       .required()
       .label('Subtasks'),
     description: Joi.string().trim().allow('').optional(),
-    position: Joi.number()
+    position: Joi.number(),
+    taskId: Joi.string()
   })
   return schema.validate(data)
 }
