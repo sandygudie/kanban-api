@@ -1,6 +1,6 @@
 const { errorResponse, successResponse } = require('../utils/responseHandler')
 const { taskValidation } = require('../utils/validators')
-const { createATask, updateATask, deleteATask, getATask } = require('../services/task')
+const { createATask, updateATask, deleteATask, assignATask, getATask } = require('../services/task')
 
 const createTask = async (req, res) => {
   const { error } = taskValidation(req.body)
@@ -55,9 +55,22 @@ const getTask = async (req, res) => {
     return errorResponse(res, 400, error.message)
   }
 }
+const assignTask = async (req, res) => {
+  try {
+    const task = await assignATask(req.params.taskId, req.body)
+    if (!task) {
+      return errorResponse(res, 400, 'Error assigning task to user')
+    }
+
+    return successResponse(res, 200, 'Task assigned', task)
+  } catch (error) {
+    return errorResponse(res, 400, error.message)
+  }
+}
 module.exports = {
   createTask,
   updateTask,
   deleteTask,
-  getTask
+  getTask,
+  assignTask
 }

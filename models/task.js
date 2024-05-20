@@ -17,15 +17,7 @@ const taskSchema = Schema(
     },
     description: String,
     status: String,
-    assignTo: [
-      new Schema(
-        {
-          userId: String,
-          profilePics: String
-        },
-        { _id: false }
-      )
-    ],
+    assignTo: [new Schema({ name: String, profilePics: String }, { _id: false })],
     dueDate: [],
     dueTime: String,
     subtasks: [

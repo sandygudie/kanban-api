@@ -57,10 +57,23 @@ const getATask = async (taskId) => {
   const task = await Task.findById(taskId)
   return task
 }
+const assignATask = async (taskId, reqBody) => {
+  const task = await Task.findById(taskId)
+  const isUserExisting = task.assignTo.find((user) => user.name === reqBody.name)
+  if (isUserExisting) {
+    task.assignTo = task.assignTo.filter((ele) => ele.name !== isUserExisting.name)
+  } else {
+    task.assignTo = task.assignTo.concat(reqBody)
+  }
+
+  await task.save()
+  return task
+}
 
 module.exports = {
   createATask,
   updateATask,
   deleteATask,
-  getATask
+  getATask,
+  assignATask
 }
