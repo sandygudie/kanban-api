@@ -17,7 +17,7 @@ const taskSchema = Schema(
     },
     description: String,
     status: String,
-    assignTo: [new Schema({ name: String, profilePics: String }, { _id: false })],
+    assignTo: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     dueDate: [],
     dueTime: String,
     subtasks: [

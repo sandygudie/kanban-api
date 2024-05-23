@@ -54,18 +54,27 @@ const deleteATask = async (params) => {
 }
 
 const getATask = async (taskId) => {
-  const task = await Task.findById(taskId)
+  const task = await Task.findById(taskId).populate({
+    path: 'assignTo',
+    select: '_id name profilePics'
+  })
   return task
 }
-const assignATask = async (taskId, reqBody) => {
-  const task = await Task.findById(taskId)
-  const isUserExisting = task.assignTo.find((user) => user.name === reqBody.name)
-  if (isUserExisting) {
-    task.assignTo = task.assignTo.filter((ele) => ele.name !== isUserExisting.name)
-  } else {
-    task.assignTo = task.assignTo.concat(reqBody)
-  }
 
+const assignATask = async (taskId, reqBody) => {
+  const userId = reqBody.userId
+
+  const task = await Task.findById(taskId).populate({
+    path: 'assignTo',
+    select: '_id name profilePics'
+  })
+
+  const isUserExisting = task.assignTo.find((user) => user._id.toString() === userId)
+  if (isUserExisting) {
+    task.assignTo = task.assignTo.filter((ele) => ele._id.toString() !== userId)
+  } else {
+    task.assignTo = task.assignTo.concat(userId)
+  }
   await task.save()
   return task
 }
