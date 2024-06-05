@@ -79,10 +79,27 @@ const assignATask = async (taskId, reqBody) => {
   return task
 }
 
+const moveATask = async (reqBody) => {
+  const { columnId, taskId } = reqBody
+
+  const task = await Task.findById(taskId)
+  const sourceColumnId = task.columnId
+  await Column.findByIdAndUpdate(sourceColumnId, { $pull: { tasks: taskId } })
+
+  const column = await Column.findOne({ _id: columnId })
+  task.columnId = columnId
+  task.status = column.name
+  const taskDetails = await task.save()
+  column.tasks.splice(0, 0, taskDetails)
+  await column.save()
+  return task
+}
+
 module.exports = {
   createATask,
   updateATask,
   deleteATask,
   getATask,
-  assignATask
+  assignATask,
+  moveATask
 }

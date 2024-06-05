@@ -50,7 +50,11 @@ const allBoards = async (reqUser, workspaceId) => {
     populate: {
       path: 'columns',
       populate: {
-        path: 'tasks'
+        path: 'tasks',
+        populate: {
+          path: 'assignTo',
+          select: '_id name profilePics'
+        }
       }
     }
   })
@@ -68,7 +72,11 @@ const getABoard = async (boardId) => {
   const board = await Board.findOne({ _id: boardId }).populate({
     path: 'columns',
     populate: {
-      path: 'tasks'
+      path: 'tasks',
+      populate: {
+        path: 'assignTo',
+        select: '_id name profilePics'
+      }
     }
   })
   return board
