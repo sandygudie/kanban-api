@@ -2,9 +2,6 @@ const { Schema, model } = require('mongoose')
 
 const taskSchema = Schema(
   {
-    _id: {
-      type: String
-    },
     title: {
       type: String,
       required: true

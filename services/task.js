@@ -1,11 +1,9 @@
 const Column = require('../models/column')
 const Task = require('../models/task')
 const User = require('../models/user')
-const mongoose = require('mongoose')
 
 const createATask = async (reqUser, body, columnId) => {
-  const { title, subtasks, description, position, taskId } = body
-  const Id = taskId || new mongoose.Types.ObjectId()
+  const { title, subtasks, description } = body
 
   const user = await User.findOne({
     _id: reqUser.id
@@ -13,7 +11,6 @@ const createATask = async (reqUser, body, columnId) => {
   const isColumnExisting = await Column.findOne({ _id: columnId })
   if (isColumnExisting) {
     const newTask = await new Task({
-      _id: Id,
       title,
       description,
       columnId,
@@ -24,7 +21,7 @@ const createATask = async (reqUser, body, columnId) => {
     newTask.status = isColumnExisting.name
     const taskDetails = await newTask.save()
     const column = await Column.findOne({ _id: columnId })
-    column.tasks.splice(position || 0, 0, taskDetails)
+    column.tasks.splice(0, 0, taskDetails)
     await column.save()
     return taskDetails
   } else {
@@ -80,7 +77,7 @@ const assignATask = async (taskId, reqBody) => {
 }
 
 const moveATask = async (reqBody) => {
-  const { columnId, taskId } = reqBody
+  const { columnId, taskId, position } = reqBody
 
   const task = await Task.findById(taskId)
   const sourceColumnId = task.columnId
@@ -90,7 +87,7 @@ const moveATask = async (reqBody) => {
   task.columnId = columnId
   task.status = column.name
   const taskDetails = await task.save()
-  column.tasks.splice(0, 0, taskDetails)
+  column.tasks.splice(position || 0, 0, taskDetails)
   await column.save()
   return task
 }
