@@ -129,7 +129,7 @@ const deleteWorkspace = async (req, res) => {
     if (!updatedWorkspace) {
       return errorResponse(res, 400, 'Error deleting workspace')
     }
-    return successResponse(res, 200, 'Workspace Deleted')
+    return successResponse(res, 200, 'Workspace Deleted', updatedWorkspace)
   } catch (error) {
     return errorResponse(res, 400, error.message)
   }

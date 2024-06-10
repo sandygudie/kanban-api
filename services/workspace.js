@@ -185,9 +185,13 @@ const removeAMemberPending = async (workspaceId, userEmail) => {
 }
 
 const deleteAWorkspace = async (workspaceId, userId) => {
-  const updatedWorkspace = await Workspace.findByIdAndDelete(workspaceId)
-  await User.updateOne({ _id: userId }, { $pull: { workspace: workspaceId } })
-  return updatedWorkspace
+  await Workspace.findByIdAndDelete(workspaceId)
+  const updatedUserWorkspace = await User.findByIdAndUpdate(
+    { _id: userId },
+    { $pull: { workspace: workspaceId } },
+    { new: true }
+  )
+  return { workspaceLeft: updatedUserWorkspace.workspace.length }
 }
 
 const addSocials = async (workspaceId, body) => {
