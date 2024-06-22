@@ -9,8 +9,5 @@ npm-debug.log
 *.dev
 .DS_Store
 
-# Docker
-docker-compose.yml
-
 todo
 lessons
