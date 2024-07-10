@@ -53,10 +53,21 @@ function boardValidation(data) {
   })
   return schema.validate(data)
 }
+
 function columnValidation(data) {
   const schema = Joi.object({
     column: Joi.array().items(Joi.string()).required().label('Column')
   })
+  return schema.validate(data)
+}
+
+function tagValidation(data) {
+  const schema = Joi.array().items(
+    Joi.object({
+      name: Joi.string().required().trim().label('tag name'),
+      color: Joi.string().required().trim().label('tag color')
+    })
+  )
   return schema.validate(data)
 }
 
@@ -88,5 +99,6 @@ module.exports = {
   joinWorkspaceValidation,
   boardValidation,
   columnValidation,
-  taskValidation
+  taskValidation,
+  tagValidation
 }

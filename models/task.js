@@ -14,6 +14,7 @@ const taskSchema = Schema(
     },
     description: String,
     status: String,
+    tags: [],
     assignTo: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     dueDate: [],
     dueTime: String,

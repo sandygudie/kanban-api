@@ -92,11 +92,29 @@ const moveATask = async (reqBody) => {
   return task
 }
 
+const addTaskTag = async (reqbody, taskId) => {
+  const task = await Task.findById(taskId)
+  task.tags = task.tags.concat(reqbody)
+  await task.save()
+  return task
+}
+
+const deleteTaskTag = async (tag, taskId) => {
+  const task = await Task.findById({
+    _id: taskId
+  })
+  task.tags = task.tags.filter((ele) => ele.name !== tag.name)
+  await task.save()
+  return task
+}
+
 module.exports = {
   createATask,
   updateATask,
   deleteATask,
   getATask,
   assignATask,
-  moveATask
+  moveATask,
+  addTaskTag,
+  deleteTaskTag
 }

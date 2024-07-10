@@ -1,12 +1,14 @@
 const { errorResponse, successResponse } = require('../utils/responseHandler')
-const { taskValidation } = require('../utils/validators')
+const { taskValidation, tagValidation } = require('../utils/validators')
 const {
   createATask,
   updateATask,
   deleteATask,
   assignATask,
   getATask,
-  moveATask
+  moveATask,
+  addTaskTag,
+  deleteTaskTag
 } = require('../services/task')
 
 const createTask = async (req, res) => {
@@ -56,7 +58,6 @@ const getTask = async (req, res) => {
     if (!task) {
       return errorResponse(res, 400, 'Error retriving task')
     }
-
     return successResponse(res, 200, 'Task retrieved', task)
   } catch (error) {
     return errorResponse(res, 400, error.message)
@@ -68,7 +69,6 @@ const assignTask = async (req, res) => {
     if (!task) {
       return errorResponse(res, 400, 'Error assigning task to user')
     }
-
     return successResponse(res, 200, 'Task assigned', task)
   } catch (error) {
     return errorResponse(res, 400, error.message)
@@ -85,11 +85,34 @@ const moveTask = async (req, res) => {
     return errorResponse(res, 400, error.message)
   }
 }
+
+const createTag = async (req, res) => {
+  const { error } = tagValidation(req.body)
+  if (error) return errorResponse(res, 400, error.details[0].message)
+  try {
+    await addTaskTag(req.body, req.params.taskId)
+    return successResponse(res, 201, 'New Tag created!')
+  } catch (error) {
+    return errorResponse(res, 400, error.message)
+  }
+}
+
+const deleteTag = async (req, res) => {
+  try {
+    await deleteTaskTag(req.body, req.params.taskId)
+    return successResponse(res, 200, 'Tag deleted!')
+  } catch (error) {
+    return errorResponse(res, 400, error.message)
+  }
+}
+
 module.exports = {
   createTask,
   updateTask,
   deleteTask,
   getTask,
   assignTask,
-  moveTask
+  moveTask,
+  createTag,
+  deleteTag
 }
