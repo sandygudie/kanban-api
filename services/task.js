@@ -98,12 +98,31 @@ const addTaskTag = async (reqbody, taskId) => {
   await task.save()
   return task
 }
-
 const deleteTaskTag = async (tag, taskId) => {
   const task = await Task.findById({
     _id: taskId
   })
   task.tags = task.tags.filter((ele) => ele.name !== tag.name)
+  await task.save()
+  return task
+}
+
+const addAttachmentService = async (payload, taskId) => {
+  const task = await Task.findById({
+    _id: taskId
+  })
+
+  task.attachments = task.attachments.concat(payload)
+  await task.save()
+  return task
+}
+
+const deleteAttachmentService = async (attachmentId, taskId) => {
+  const task = await Task.findById({
+    _id: taskId
+  })
+  const filteredArr = task.attachments.filter((ele) => ele._id.toString() !== attachmentId)
+  task.attachments = filteredArr
   await task.save()
   return task
 }
@@ -116,5 +135,7 @@ module.exports = {
   assignATask,
   moveATask,
   addTaskTag,
-  deleteTaskTag
+  deleteTaskTag,
+  addAttachmentService,
+  deleteAttachmentService
 }

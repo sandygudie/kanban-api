@@ -8,8 +8,12 @@ const {
   getATask,
   moveATask,
   addTaskTag,
-  deleteTaskTag
+  deleteTaskTag,
+  addAttachmentService,
+  deleteAttachmentService
 } = require('../services/task')
+const { imagekitUploadImage } = require('../utils/upload')
+const { IMAGEKIT_APP_FOLDER, IMAGEKIT_ENV } = require('../config')
 
 const createTask = async (req, res) => {
   const { error } = taskValidation(req.body)
@@ -106,6 +110,44 @@ const deleteTag = async (req, res) => {
   }
 }
 
+const addAttachment = async (req, res) => {
+  try {
+    if (req.file) {
+      const imageUploadPayload = {
+        file: req.file.buffer,
+        fileName: req.file.originalname,
+        folder: `${IMAGEKIT_APP_FOLDER}/${IMAGEKIT_ENV}/TASK_${req.params.taskId}`
+      }
+
+      const url = await imagekitUploadImage(imageUploadPayload)
+      const payload = {
+        type: req.file.mimetype === 'application/pdf' ? 'pdf' : 'image',
+        url,
+        name: req.file.originalname,
+        addDate: Date.now()
+      }
+      await addAttachmentService(payload, req.params.taskId)
+      return successResponse(res, 200, 'New Attachment added!')
+    } else {
+      const payload = { type: 'link', url: req.body.link, name: 'Link', addDate: Date.now() }
+      await addAttachmentService(payload, req.params.taskId)
+      return successResponse(res, 200, 'New Attachment added!')
+    }
+  } catch (error) {
+    return errorResponse(res, 400, error.message)
+  }
+}
+
+const deleteAttachment = async (req, res) => {
+  const { attachmentId, taskId } = req.params
+  try {
+    await deleteAttachmentService(attachmentId, taskId)
+    return successResponse(res, 200, 'Attachment deleted!')
+  } catch (error) {
+    return errorResponse(res, 400, error.message)
+  }
+}
+
 module.exports = {
   createTask,
   updateTask,
@@ -114,5 +156,7 @@ module.exports = {
   assignTask,
   moveTask,
   createTag,
-  deleteTag
+  deleteTag,
+  addAttachment,
+  deleteAttachment
 }

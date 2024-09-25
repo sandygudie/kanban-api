@@ -18,6 +18,14 @@ const taskSchema = Schema(
     assignTo: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     dueDate: [],
     dueTime: String,
+    attachments: [
+      new Schema({
+        type: String,
+        name: String,
+        url: String,
+        addDate: Date
+      })
+    ],
     subtasks: [
       new Schema({
         title: String,
