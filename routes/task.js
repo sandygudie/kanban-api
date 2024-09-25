@@ -25,7 +25,6 @@ taskRouter.delete('/:workspaceId/:columnId/:taskId', verifyUser, verifyWorkspace
 taskRouter.get('/:workspaceId/:taskId', verifyUser, verifyWorkspaceMember, getTask)
 taskRouter.patch('/movetask/:workspaceId', verifyUser, verifyWorkspaceMember, moveTask)
 taskRouter.post('/assign-task/:workspaceId/:taskId', verifyUser, verifyWorkspaceMember, assignTask)
-
 taskRouter.delete('/tag/:taskId', verifyUser, deleteTag)
 
 module.exports = { taskRouter }
