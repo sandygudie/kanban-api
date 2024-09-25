@@ -16,6 +16,7 @@ const { verifyUser, verifyWorkspaceMember } = require('../middlewares/userChecks
 
 const taskRouter = Router()
 const upload = multer().single('file')
+
 taskRouter.post('/attachment/:taskId', upload, verifyUser, addAttachment)
 taskRouter.delete('/attachment/:taskId/:attachmentId', verifyUser, deleteAttachment)
 taskRouter.post('/tag/:taskId', verifyUser, createTag)
